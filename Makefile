@@ -21,9 +21,6 @@ basemodels: db tables
 phpmyadmin: db
 	docker-compose up -d phpmyadmin
 
-quicktest:
-	docker-compose run --rm test bash -c "vendor/bin/behat --stop-on-failure --strict --append-snippets"
-
 test: app
 	make testunit
 	make testapi
