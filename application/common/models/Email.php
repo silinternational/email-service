@@ -14,6 +14,7 @@ class Email extends EmailBase
                 [
                     'attempts_count', 'default', 'value' => 0,
                 ],
+//TODO: look at http://www.yiiframework.com/doc-2.0/yii-behaviors-timestampbehavior.html
                 [
                     'created_at', 'default', 'value' => time(),
                 ],
@@ -23,6 +24,8 @@ class Email extends EmailBase
             ],
             parent::rules()
         );
+
+//TODO: add rule to require some content (text or html and non-empty)
     }
 
     /**
