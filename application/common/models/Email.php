@@ -143,6 +143,48 @@ class Email extends EmailBase
     }
 
     /**
+     * Attempt to send messages from queue
+     * @throws \Exception
+     */
+    public static function sendQueuedEmail()
+    {
+        $log = [
+            'action' => 'email/sendQueuedEmail',
+        ];
+        try {
+            $batchSize = \Yii::$app->params['emailQueueBatchSize'];
+            $queued = self::find()->orderBy(['updated_at' => SORT_ASC])->limit($batchSize)->all();
+
+            $log += [
+                'batchSize' => $batchSize,
+                'queuedEmails' => count($queued),
+                'sentEmails' => 0,
+            ];
+
+            if (empty($queued)) {
+                // If nothing queued, no need to send log
+                return;
+            }
+
+            /** @var Email $email */
+            foreach ($queued as $email) {
+                $email->retry();
+                $log['sentEmails']++;
+            }
+        } catch (\Exception $e) {
+            $log += [
+                'status' => 'error',
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+            \Yii::error($log);
+        }
+
+        // Send log of successful processing
+        \Yii::info($log);
+    }
+
+    /**
      * If $this has been saved to database, it will be deleted and on failure throw an exception
      * @throws \Exception
      */

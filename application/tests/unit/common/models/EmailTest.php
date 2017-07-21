@@ -24,6 +24,7 @@ class EmailTest extends Test
 
     public function testCreateMassAssignment_MinimumFields()
     {
+        Email::deleteAll();
         $timestamp = microtime();
         $attributes = [
             'to_address' => 'test@test.com',
@@ -54,7 +55,7 @@ class EmailTest extends Test
 
     public function testCreateMassAssignment_AllowedFields()
     {
-
+        Email::deleteAll();
         $timestamp = microtime();
         $attributes = [
             'to_address' => 'test@test.com',
@@ -89,6 +90,7 @@ class EmailTest extends Test
 
     public function testCreateMassAssignment_AllFields()
     {
+        Email::deleteAll();
         $this->markTestSkipped('Skipping until scenarios are built to prevent mass assignment of unsafe attributes');
         $timestamp = microtime();
         $attributes = [
@@ -129,6 +131,7 @@ class EmailTest extends Test
 
     public function testSend()
     {
+        Email::deleteAll();
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
@@ -157,6 +160,7 @@ class EmailTest extends Test
 
     public function testRetry()
     {
+        Email::deleteAll();
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
@@ -185,6 +189,7 @@ class EmailTest extends Test
 
     public function testGetMessageRendersAsHtmlAndText()
     {
+        Email::deleteAll();
         $timestamp = microtime();
         $attributes = [
             'to_address' => 'test@test.com',
@@ -209,6 +214,39 @@ class EmailTest extends Test
         $this->assertContains('text/plain', $asString);
         $this->assertContains('text/html', $asString);
         $this->assertContains('<!DOCTYPE html PUBLIC', $asString);
+    }
+
+    public function testSendQueuedEmails()
+    {
+        Email::deleteAll();
+        $initialEmailQueueCount = Email::find()->count();
+        $initialEmailSentCount = $this->countMailFiles();
+
+        $timestamp = microtime();
+        $attributes = [
+            'to_address' => 'test@test.com',
+            'cc_address' => 'testcc@test.com',
+            'bcc_address' => 'testbcc@test.com',
+            'subject' => $timestamp,
+            'text_body' => 'text body',
+            'html_body' => '<b>html body</b>',
+        ];
+
+        // create 5 queued emails
+        for ($i=0; $i<5; $i++) {
+            $email = new Email();
+            $email->attributes = $attributes;
+            $this->assertTrue(
+                $email->save(),
+                'Failed to save with allowed fields: ' . print_r($email->getFirstErrors(), true)
+            );
+        }
+
+        $this->assertEquals($initialEmailQueueCount + 5, Email::find()->count());
+        Email::sendQueuedEmail();
+        $this->assertEquals(0, Email::find()->count());
+        $this->assertEquals($initialEmailSentCount + 5, $this->countMailFiles());
+
     }
 
 
