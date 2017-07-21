@@ -1,9 +1,11 @@
 # Codeception Test Suite Configuration
-#
-# Suite for unit or integration tests.
 
-actor: UnitTester
+# suite for unit (internal) tests.
+class_name: UnitTester
 modules:
     enabled:
-        - Asserts
-        - \Helper\Unit
+      - Asserts
+      - \Helper\Unit
+      - Yii2:
+          configFile: 'tests/codeception/config/unit.php'
+          cleanup: true

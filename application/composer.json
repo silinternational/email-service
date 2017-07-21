@@ -14,7 +14,7 @@
     "yiisoft/yii2-swiftmailer": "^2.0"
   },
   "require-dev": {
-    "codeception/codeception": "^2.2",
+    "codeception/codeception": "2.2.7",
     "codeception/specify": "0.*",
     "codeception/verify": "0.*",
     "silinternational/yii2-codeception": "dev-master"
