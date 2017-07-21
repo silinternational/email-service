@@ -19,8 +19,8 @@ app:
         APP_ENV: test
         MYSQL_HOST: db
         MYSQL_DATABASE: test
-        MYSQL_USER: idbroker
-        MYSQL_PASSWORD: idbroker
+        MYSQL_USER: email
+        MYSQL_PASSWORD: email
         API_ACCESS_KEYS: abc123
         APP_NAME: email-service
         MAILER_HOST: test
