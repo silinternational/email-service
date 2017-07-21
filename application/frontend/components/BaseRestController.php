@@ -21,6 +21,11 @@ class BaseRestController extends Controller
     protected function save(ActiveRecord $record)
     {
         if (! $record->save()) {
+            \Yii::error([
+                'action' => 'save record',
+                'status' => 'error',
+                'error' => current($record->getFirstErrors())
+            ]);
             throw new UnprocessableEntityHttpException(current($record->getFirstErrors()));
         }
     }

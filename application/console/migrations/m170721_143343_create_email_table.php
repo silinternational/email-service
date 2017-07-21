@@ -21,8 +21,8 @@ class m170721_143343_create_email_table extends Migration
                 'text_body' => 'text null',
                 'html_body' => 'text null',
                 'attempts_count' => 'tinyint not null default 0',
-                'updated_on' => 'timestamp null',
-                'created_on' => 'timestamp not null',
+                'updated_at' => 'int(11) null',
+                'created_at' => 'int(11) not null',
                 'error' => 'varchar(255) null',
             ],
             'ENGINE=InnoDB DEFAULT CHARSET=utf8'

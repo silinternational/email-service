@@ -60,15 +60,7 @@ return [
             'showScriptName' => false, // turns /index.php/post/100 into /post/100
             // http://www.yiiframework.com/doc-2.0/guide-rest-routing.html
             'rules' => [
-                'GET  user'                           => 'user/index',
-                'GET  user/expiring'                  => 'user/expiring',
-                'GET  user/first-password'            => 'user/first-password',
-                'GET  user/<employeeId:\w+>'          => 'user/view',
-                'POST user'                           => 'user/create',
-                'PUT  user/<employeeId:\w+>'          => 'user/update',
-                'PUT  user/<employeeId:\w+>/password' => 'user/update-password',
-
-                'POST authentication' => 'authentication/create',
+                'POST email' => 'email/queue',
 
                 'site/status' => 'site/status',
 
@@ -77,9 +69,6 @@ return [
         ],
     ],
     'params' => [
-        'authorizedTokens'              => Env::getArray('API_ACCESS_KEYS'),
-        'passwordReuseLimit'            => Env::get('PASSWORD_REUSE_LIMIT', 10),
-        'passwordLifespan'              => Env::get('PASSWORD_LIFESPAN', '+1 year'),
-        'passwordExpirationGracePeriod' => Env::get('PASSWORD_EXPIRATION_GRACE_PERIOD', '+30 days'),
+        'authorizedTokens' => Env::getArray('API_ACCESS_KEYS'),
     ],
 ];

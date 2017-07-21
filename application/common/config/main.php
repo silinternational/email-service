@@ -6,6 +6,8 @@ use yii\db\Connection;
 use yii\swiftmailer\Mailer;
 
 $appName       = Env::requireEnv('APP_NAME');
+$fromEmail     = Env::requireEnv('FROM_EMAIL');
+$fromName      = Env::requireEnv('FROM_NAME');
 $mysqlHost     = Env::requireEnv('MYSQL_HOST');
 $mysqlDatabase = Env::requireEnv('MYSQL_DATABASE');
 $mysqlUser     = Env::requireEnv('MYSQL_USER');
@@ -15,7 +17,8 @@ $mailerUsername    = Env::requireEnv('MAILER_USERNAME');
 $mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
 $notificationEmail = Env::requireEnv('NOTIFICATION_EMAIL');
 
-$mailerUseFiles    = Env::get('MAILER_USEFILES', false);
+$emailQueueBatchSize = Env::get('EMAIL_QUEUE_BATCH_SIZE', 10);
+$mailerUseFiles      = Env::get('MAILER_USEFILES', false);
 
 
 return [
@@ -59,6 +62,8 @@ return [
         ],
     ],
     'params' => [
-        'emailQueueBatchSize' => Env::get('EMAIL_QUEUE_BATCH_SIZE', 10),
+        'fromEmail' => $fromEmail,
+        'fromName' => $fromName,
+        'emailQueueBatchSize' => $emailQueueBatchSize,
     ],
 ];

@@ -23,6 +23,25 @@ services:
         env_file:
             - ./local.env
 
+    cron:
+        build: ./
+        volumes_from:
+            - data
+        depends_on:
+            - db
+        env_file:
+            - ./local.env
+        command: /data/run-cron.sh
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        ports:
+            - "8001:80"
+        environment:
+            PMA_HOST: db
+            PMA_USER: email
+            PMA_PASSWORD: email
+
     cli:
         image: silintl/php7:latest
         volumes_from:
@@ -43,4 +62,4 @@ services:
             - ./local.env
         environment:
             APP_ENV: test
-        command: ./run-tests.sh
+        command: /data/run-tests.sh

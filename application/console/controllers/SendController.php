@@ -15,7 +15,7 @@ class SendController extends Controller
             echo 'starting cron/send-queued-email' . PHP_EOL;
 
             $batchSize = \Yii::$app->params['emailQueueBatchSize'];
-            $queued = Email::find()->orderBy(['last_attempt' => SORT_ASC])->limit($batchSize)->all();
+            $queued = Email::find()->orderBy(['updated_at' => SORT_ASC])->limit($batchSize)->all();
 
             if (empty($queued)) {
                 echo 'no queued emails to send' . PHP_EOL;
@@ -29,7 +29,7 @@ class SendController extends Controller
                 $email->retry();
             }
         } catch (\Exception $e) {
-            echo 'error occured' . PHP_EOL;
+            echo 'error occurred' . PHP_EOL;
             \Yii::error([
                 'action' => 'send/sendQueuedEmail',
                 'status' => 'error',

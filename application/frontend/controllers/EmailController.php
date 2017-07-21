@@ -1,16 +1,21 @@
 <?php
 namespace frontend\controllers;
 
-use common\helpers\MySqlDateTime;
 use common\models\Email;
 use frontend\components\BaseRestController;
+use yii\web\ServerErrorHttpException;
 
 class EmailController extends BaseRestController
 {
 
-    public function actionCreate(): Email
+    public function actionQueue(): Email
     {
+        $email = new Email();
+        $email->attributes = \Yii::$app->request->getBodyParams();
 
+        $this->save($email);
+
+        return $email;
     }
 
 }

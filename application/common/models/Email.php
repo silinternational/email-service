@@ -3,6 +3,7 @@
 namespace common\models;
 
 use yii\helpers\ArrayHelper;
+use yii\web\ServerErrorHttpException;
 
 class Email extends EmailBase
 {
@@ -14,7 +15,7 @@ class Email extends EmailBase
                     'attempts_count', 'default', 'value' => 0,
                 ],
                 [
-                    'created_on', 'default', 'value' => time(),
+                    'created_at', 'default', 'value' => time(),
                 ],
                 [
                     ['to_address', 'cc_address', 'bcc_address'], 'email',
@@ -22,55 +23,6 @@ class Email extends EmailBase
             ],
             parent::rules()
         );
-    }
-
-    /**
-     * Attempt to send an email, but on error queue it.
-     * Throws exception if send and queue fail
-     * @param string $toAddress
-     * @param string $subject
-     * @param string $textBody
-     * @param null|string $htmlBody
-     * @param null|string $ccAddress
-     * @param null|integer $eventLogUserId
-     * @param null|string $eventLogTopic
-     * @param null|string $eventLogDetails
-     * @return EmailQueue
-     * @throws \Exception
-     */
-    public static function sendOrQueue(
-        $toAddress,
-        $subject,
-        $textBody,
-        $htmlBody = null,
-        $ccAddress = null,
-        $eventLogUserId = null,
-        $eventLogTopic = null,
-        $eventLogDetails = null
-    ) {
-        $emailQueue = new EmailQueue();
-        $emailQueue->to_address = $toAddress;
-        $emailQueue->subject = $subject;
-        $emailQueue->text_body = $textBody;
-        $emailQueue->html_body = $htmlBody;
-        $emailQueue->cc_address = $ccAddress;
-        $emailQueue->event_log_user_id = $eventLogUserId;
-        $emailQueue->event_log_topic = $eventLogTopic;
-        $emailQueue->event_log_details = $eventLogDetails;
-
-        try {
-            $emailQueue->send();
-        } catch (\Exception $e) {
-            /*
-             * Send failed, attempt to queue
-             */
-            $emailQueue->attempts_count += 1;
-            $emailQueue->last_attempt = Utils::getDatetime();
-            $emailQueue->queue();
-        }
-
-
-        return $emailQueue;
     }
 
     /**
@@ -82,8 +34,7 @@ class Email extends EmailBase
     public function send()
     {
         $log = [
-            'class' => __CLASS__,
-            'action' => 'send',
+            'action' => 'send email',
             'to' => $this->to_address,
             'subject' => $this->subject,
         ];
@@ -98,11 +49,6 @@ class Email extends EmailBase
             }
 
             /*
-             * Create event log entry if needed
-             */
-            $this->createEventLogEntry();
-
-            /*
              * Remove entry from queue (if saved to queue) after successful send
              */
             $this->removeFromQueue();
@@ -111,7 +57,7 @@ class Email extends EmailBase
              * Log success
              */
             $log['status'] = 'sent';
-            \Yii::warning($log, 'application');
+            \Yii::info($log, 'application');
 
         } catch (\Exception $e) {
             throw $e;
@@ -131,19 +77,29 @@ class Email extends EmailBase
              * Send failed, attempt to queue
              */
             $this->attempts_count += 1;
-            $this->last_attempt = Utils::getDatetime();
+            $this->updated_at = time();
 
             $log = [
-                'class' => __CLASS__,
-                'action' => 'retry',
+                'action' => 'retry sending email',
                 'to' => $this->to_address,
                 'subject' => $this->subject,
                 'attempts_count' => $this->attempts_count,
-                'last_attempt' => $this->last_attempt,
+                'last_attempt' => $this->updated_at,
             ];
             \Yii::error($log);
 
-            $this->queue($log, $e);
+            if ( ! $this->save()) {
+                \Yii::error([
+                    'action' => 'save email after failed retry failed',
+                    'status' => 'error',
+                    'error' => $this->getFirstErrors(),
+                ]);
+                throw new ServerErrorHttpException(
+                    'Unable to save email after failing to retry sending. Error: ' .
+                        print_r($this->getFirstErrors(), true),
+                    1500649788
+                );
+            }
         }
     }
 
@@ -157,6 +113,8 @@ class Email extends EmailBase
         $mailer->setFrom(\Yii::$app->params['fromEmail']);
         $mailer->setTo($this->to_address);
         $mailer->setSubject($this->subject);
+
+        // @todo render text and html before setting
         $mailer->setTextBody($this->text_body);
 
         /*
@@ -164,6 +122,7 @@ class Email extends EmailBase
          */
         $setMethods = [
             'setCc' => $this->cc_address,
+            'setBcc' => $this->bcc_address,
             'setHtmlBody' => $this->html_body,
         ];
         foreach ($setMethods as $method => $value) {
@@ -173,53 +132,6 @@ class Email extends EmailBase
         }
 
         return $mailer;
-    }
-
-    /**
-     * Creates an EventLog entry if $this->event_log_* properties are set
-     * @return boolean
-     * @throws \Exception
-     */
-    private function createEventLogEntry()
-    {
-        if ($this->event_log_topic !== null && $this->event_log_details !== null && $this->event_log_user_id !== null) {
-            EventLog::log($this->event_log_topic, $this->event_log_details, $this->event_log_user_id);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Queue's email for sending later, if there is an error saving to db it throws an exception
-     * @throws \Exception
-     */
-    private function queue()
-    {
-        $log = [
-            'class' => __CLASS__,
-            'action' => 'queue',
-            'to' => $this->to_address,
-            'subject' => $this->subject,
-            'attempts_count' => $this->attempts_count,
-            'last_attempt' => $this->last_attempt,
-        ];
-
-        if ( ! $this->save()) {
-            /*
-             * Queue failed, log it and throw exception
-             */
-            $log['status'] = 'failed to queue';
-            $log['error'] = Json::encode($this->getFirstErrors());
-            \Yii::error($log, 'application');
-            throw new \Exception('Unable to queue email: ' . $log['error'], 1461009236);
-        }
-
-        /*
-         * Email queued, log it
-         */
-        $log['status'] = 'queued';
-        \Yii::warning($log, 'application');
     }
 
     /**
@@ -237,7 +149,6 @@ class Email extends EmailBase
             }
         } catch (\Exception $e) {
             $log = [
-                'class' => __CLASS__,
                 'action' => 'delete after send',
                 'status' => 'failed to delete',
                 'error' => $e->getMessage(),
