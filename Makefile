@@ -18,6 +18,9 @@ tables: db
 basemodels: db tables
 	docker-compose run --rm cli whenavail db 3306 100 ./rebuildbasemodels.sh
 
+phpmyadmin: db
+	docker-compose up -d phpmyadmin
+
 quicktest:
 	docker-compose run --rm test bash -c "vendor/bin/behat --stop-on-failure --strict --append-snippets"
 
