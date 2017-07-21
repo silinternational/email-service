@@ -11,4 +11,4 @@ runny whenavail db 3306 100 ./yii migrate --interactive=0
 runny apachectl start
 
 # Run the feature tests
-runny ./vendor/bin/codecept run unit
+./vendor/bin/codecept run unit

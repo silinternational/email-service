@@ -50,16 +50,3 @@ services:
         env_file:
             - ./local.env
         command: ["true"]
-
-    test:
-        image: silintl/php7:latest
-        volumes_from:
-            - data
-        working_dir: /data
-        depends_on:
-            - app
-        env_file:
-            - ./local.env
-        environment:
-            APP_ENV: test
-        command: /data/run-tests.sh
