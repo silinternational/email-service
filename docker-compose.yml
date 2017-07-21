@@ -4,7 +4,6 @@ services:
         image: silintl/data-volume:latest
         volumes:
             - ./application:/data
-            - ./auth.json:/root/.composer/auth.json
 
     db:
         image: silintl/mariadb:latest
