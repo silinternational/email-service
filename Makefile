@@ -25,7 +25,14 @@ quicktest:
 	docker-compose run --rm test bash -c "vendor/bin/behat --stop-on-failure --strict --append-snippets"
 
 test: app
+	make testunit
+	make testapi
+
+testunit:
 	APP_ENV=test docker-compose run --rm app /data/run-tests.sh
+
+testapi:
+	APP_ENV=test docker-compose run --rm app /data/run-tests-api.sh
 
 clean:
 	docker-compose kill
