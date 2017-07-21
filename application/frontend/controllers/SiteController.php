@@ -2,12 +2,12 @@
 namespace frontend\controllers;
 
 use Exception;
-use frontend\components\BaseRestController;
 use Yii;
+use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-class SiteController extends BaseRestController
+class SiteController extends Controller
 {
     public function behaviors()
     {
