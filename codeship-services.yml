@@ -1,0 +1,24 @@
+db:
+    image: silintl/mariadb:latest
+    environment:
+        MYSQL_ROOT_PASSWORD: r00tp@ss!
+        MYSQL_DATABASE: test
+        MYSQL_USER: email
+        MYSQL_PASSWORD: email
+
+app:
+    build:
+        image: silintl/email-service
+        dockerfile_path: ./Dockerfile
+        cached: true
+    links:
+        - db
+    working_dir: /data
+    command: /data/run-tests.sh
+    environment:
+        APP_ENV: test
+        MYSQL_HOST: db
+        MYSQL_DATABASE: test
+        MYSQL_USER: idbroker
+        MYSQL_PASSWORD: idbroker
+        API_ACCESS_KEYS: abc123
