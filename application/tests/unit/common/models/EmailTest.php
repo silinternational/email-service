@@ -6,6 +6,13 @@ use common\models\Email;
 use Sil\Codeception\TestCase\Test;
 use tests\unit\fixtures\common\models\EmailFixture;
 
+include_once __DIR__ . '/../../../_support/UnitTester.php';
+
+/**
+ * Class EmailTest
+ * @package tests\unit\common\models
+ * @property \UnitTester tester
+ */
 class EmailTest extends Test
 {
     public function _fixtures()
@@ -174,6 +181,34 @@ class EmailTest extends Test
         $email->retry();
         $this->assertEquals($initialEmailSentCount+1, $this->countMailFiles(), 'sent emails count did not increase by one after sending email');
         $this->assertEquals($initialEmailQueueCount, Email::find()->count(), 'emails in db did not decrease by one after sending email');
+    }
+
+    public function testGetMessageRendersAsHtmlAndText()
+    {
+        $timestamp = microtime();
+        $attributes = [
+            'to_address' => 'test@test.com',
+            'cc_address' => 'testcc@test.com',
+            'bcc_address' => 'testbcc@test.com',
+            'subject' => $timestamp,
+            'text_body' => 'text body',
+            'html_body' => '<b>html body</b>',
+        ];
+
+        $email = new Email();
+        $email->attributes = $attributes;
+        $this->assertTrue(
+            $email->save(),
+            'Failed to save with allowed fields: ' . print_r($email->getFirstErrors(), true)
+        );
+
+        $email->send();
+        /** @var yii\mail\Message[] $sent */
+        $sent = $this->tester->grabSentEmails();
+        $asString = $sent[0]->toString();
+        $this->assertContains('text/plain', $asString);
+        $this->assertContains('text/html', $asString);
+        $this->assertContains('<!DOCTYPE html PUBLIC', $asString);
     }
 
 

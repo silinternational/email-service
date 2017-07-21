@@ -110,15 +110,21 @@ class Email extends EmailBase
      * Builds a mailer object from $this and returns it
      * @return \yii\mail\MessageInterface
      */
-    private function getMessage()
+    public function getMessage()
     {
-        $mailer = \Yii::$app->mailer->compose();
+        $mailer = \Yii::$app->mailer->compose(
+            [
+                'html' => '@common/mail/html',
+                'text' => '@common/mail/text'
+            ],
+            [
+                'html' => $this->html_body,
+                'text' => $this->text_body
+            ]
+        );
         $mailer->setFrom(\Yii::$app->params['fromEmail']);
         $mailer->setTo($this->to_address);
         $mailer->setSubject($this->subject);
-
-        // @todo render text and html before setting
-        $mailer->setTextBody($this->text_body);
 
         /*
          * Conditionally set optional fields
@@ -126,7 +132,6 @@ class Email extends EmailBase
         $setMethods = [
             'setCc' => $this->cc_address,
             'setBcc' => $this->bcc_address,
-            'setHtmlBody' => $this->html_body,
         ];
         foreach ($setMethods as $method => $value) {
             if ($value) {

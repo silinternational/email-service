@@ -51,6 +51,8 @@ return [
         'mailer' => [
             'class' => Mailer::class,
             'useFileTransport' => $mailerUseFiles,
+            'htmlLayout' => '@common/mail/layouts/html',
+            'textLayout' => '@common/mail/layouts/text',
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
                 'host' => $mailerHost,
