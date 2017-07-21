@@ -114,7 +114,7 @@ class EmailCest
     public function testSystemStatus(ApiTester $I)
     {
         $I->wantTo('test system status');
-        $I->sendPOST('/site/status');
+        $I->sendGET('/site/status');
         $I->seeResponseCodeIs(204);
     }
 }

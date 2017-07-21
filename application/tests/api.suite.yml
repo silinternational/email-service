@@ -3,6 +3,6 @@ modules:
     enabled:
         - \Helper\Api
         - REST:
-            url: http://app
+            url: http://localhost
             depends: PhpBrowser
             part: Json
