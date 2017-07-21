@@ -3,7 +3,6 @@ namespace frontend\controllers;
 
 use common\models\Email;
 use frontend\components\BaseRestController;
-use yii\web\ServerErrorHttpException;
 
 class EmailController extends BaseRestController
 {
