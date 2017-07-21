@@ -1,7 +1,7 @@
 start: app
 
 app: db deps
-	docker-compose up -d app
+	docker-compose up -d app phpmyadmin
 
 deps:
 	docker-compose run --rm cli composer install
