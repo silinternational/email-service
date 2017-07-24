@@ -7,6 +7,23 @@ use yii\web\ServerErrorHttpException;
 
 class Email extends EmailBase
 {
+    public function scenarios()
+    {
+        $scenarios = [
+            self::SCENARIO_DEFAULT => [
+                'to_address',
+                'cc_address',
+                'bcc_address',
+                'subject',
+                'text_body',
+                'html_body',
+                '!created_at', //TODO: might remove after using timestampbehavior
+            ],
+        ];
+
+        return $scenarios;
+    }
+
     public function rules()
     {
         return ArrayHelper::merge(
@@ -212,5 +229,31 @@ class Email extends EmailBase
         }
     }
 
-
+//    /** TODO: update for this service
+//     * @return array of fields that should be included in responses.
+//     */
+//    public function fields(): array
+//    {
+//        $fields = [
+//            'uuid',
+//            'employee_id',
+//            'first_name',
+//            'last_name',
+//            'display_name' => function ($model) {
+//                return $model->display_name ?? "$model->first_name $model->last_name";
+//            },
+//            'username',
+//            'email',
+//            'active',
+//            'locked',
+//        ];
+//
+//        if ($this->current_password_id !== null) {
+//            $fields['password'] = function () {
+//                return $this->currentPassword;
+//            };
+//        }
+//
+//        return $fields;
+//    }
 }

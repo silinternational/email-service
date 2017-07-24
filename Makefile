@@ -25,6 +25,8 @@ test: app
 testunit:
 	APP_ENV=test docker-compose run --rm app /data/run-tests.sh
 
+#TODO: tests api won't run unless the access keys are abc-123, need to change that so test will run out-of-box.
+# would be best to have an additional container for testing becasue I don't think the env vars are being honored on the command line the way we think they are.
 testapi:
 	APP_ENV=test docker-compose run --rm app /data/run-tests-api.sh
 

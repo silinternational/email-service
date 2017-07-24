@@ -18,11 +18,7 @@ class EmailCest
     public function testQueue_NoAccessToken(ApiTester $I)
     {
         $I->wantTo('queue an email without a bearer access token');
-        $I->sendPOST('/email', [
-            'to_address' => 'test@test.com',
-            'subject' => 'test subject',
-            'text_body' => 'text body',
-        ]);
+        $I->sendPOST('/email');
         $I->seeResponseCodeIs(401);
     }
 
@@ -30,11 +26,7 @@ class EmailCest
     {
         $I->wantTo('queue an email with an invalid bearer access token');
         $I->haveHttpHeader('Authorization', 'Bearer invalid');
-        $I->sendPOST('/email', [
-            'to_address' => 'test@test.com',
-            'subject' => 'test subject',
-            'text_body' => 'text body',
-        ]);
+        $I->sendPOST('/email');
         $I->seeResponseCodeIs(401);
     }
 
@@ -44,10 +36,11 @@ class EmailCest
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
             'to_address' => 'test@test.com',
-            'subject' => 'test subject',
+            'subject' => 'test subject min fields',
             'text_body' => 'text body',
         ]);
         $I->seeResponseCodeIs(200);
+//        TODO: need another test with html_body only
     }
 
     public function testQueue_AllowedFields(ApiTester $I)
@@ -58,7 +51,7 @@ class EmailCest
             'to_address' => 'test@test.com',
             'cc_address' => 'testcc@test.com',
             'bcc_address' => 'testbcc@test.com',
-            'subject' => 'subject',
+            'subject' => 'subject allowed fields',
             'text_body' => 'text body',
             'html_body' => 'html body',
         ]);
@@ -74,7 +67,7 @@ class EmailCest
             'to_address' => 'test@test.com',
             'cc_address' => 'testcc@test.com',
             'bcc_address' => 'testbcc@test.com',
-            'subject' => 'subject',
+            'subject' => 'subject all fields',
             'text_body' => 'text body',
             'html_body' => 'html body',
             'attempts_count' => 111,
@@ -83,6 +76,7 @@ class EmailCest
             'error' => 'error message',
         ]);
         $I->seeResponseCodeIs(200);
+//        TODO: need to assert values in db are accurate
     }
 
     public function testQueue_InvalidToAddress(ApiTester $I)
@@ -90,7 +84,6 @@ class EmailCest
         $I->wantTo('queue an email with an invalid to_address');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
-            'id' => 123,
             'to_address' => 'test',
             'subject' => 'subject',
             'text_body' => 'text body',
@@ -100,14 +93,9 @@ class EmailCest
 
     public function testInvalidPath(ApiTester $I)
     {
-        $I->wantTo('queue an email with an invalid to_address');
+        $I->wantTo('queue an email using the wrong path');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
-        $I->sendPOST('/invalid', [
-            'id' => 123,
-            'to_address' => 'test',
-            'subject' => 'subject',
-            'text_body' => 'text body',
-        ]);
+        $I->sendPOST('/invalid');
         $I->seeResponseCodeIs(404);
     }
 
