@@ -22,7 +22,7 @@ class EmailCest
         $I->wantTo('queue an email with minimum fields using a text body');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
-            'to_address' => 'test@test.com',
+            'to_address' => 'test@example.org',
             'subject' => 'test subject min fields (text body)',
             'text_body' => 'text body',
         ]);
@@ -34,7 +34,7 @@ class EmailCest
         $I->wantTo('queue an email with minimum fields using an html body');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
-            'to_address' => 'test@test.com',
+            'to_address' => 'test@example.org',
             'subject' => 'test subject min fields (html body)',
             'html_body' => '<p>html body</p>',
         ]);
@@ -46,9 +46,9 @@ class EmailCest
         $I->wantTo('queue an email with allowed fields');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
+            'to_address' => 'test@example.org',
+            'cc_address' => 'testcc@example.org',
+            'bcc_address' => 'testbcc@example.org',
             'subject' => 'subject allowed fields',
             'text_body' => 'text body',
             'html_body' => 'html body',
@@ -62,9 +62,9 @@ class EmailCest
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
             'id' => 123,
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
+            'to_address' => 'test@example.org',
+            'cc_address' => 'testcc@example.org',
+            'bcc_address' => 'testbcc@example.org',
             'subject' => 'subject all fields',
             'text_body' => 'text body',
             'html_body' => 'html body',
