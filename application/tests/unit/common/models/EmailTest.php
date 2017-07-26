@@ -14,115 +14,109 @@ include_once __DIR__ . '/../../../_support/UnitTester.php';
  */
 class EmailTest extends Test
 {
+    private $stubToAddress = 'test@example.org';
+    private $stubCcAddress = 'testCc@example.org';
+    private $stubBccAddress = 'testBcc@example.org';
+    private $stubSubject;
+    private $stubTextBody = 'email content as text';
+    private $stubHtmlBody = '<p>email content as html</p>';
+
     protected function _before()
     {
         Email::deleteAll();
+
+        $this->stubSubject = 'tested at '.microtime();
     }
 
     public function testCreateMassAssignment_MinimumFields()
     {
-        $timestamp = microtime();
-        $attributes = [
-            'to_address' => 'test@test.com',
-            'subject' => (string)$timestamp,
+        $email = new Email();
+
+        $email->attributes = [
+            'to_address' => $this->stubToAddress,
+            'subject' => $this->stubSubject,
             //TODO: need to have a body as well.
         ];
 
-        $email = new Email();
-
-        $email->attributes = $attributes;
-        $this->assertTrue(
-            $email->save(),
-            'Failed to save with minimum fields: ' . print_r($email->getFirstErrors(), true)
-        );
-
-        $this->assertEquals($attributes['to_address'], $email->to_address);
-        $this->assertEquals($attributes['subject'], $email->subject);
-        $this->assertEquals(0, $email->attempts_count);
+        $this->assertTrue($email->save(), current($email->getFirstErrors()));
 
         $this->assertNotNull($email->id);
-        $this->assertNotNull($email->created_at);
-        $this->assertNotNull($email->updated_at);
-
+        $this->assertEquals($this->stubToAddress, $email->to_address);
         $this->assertNull($email->cc_address);
         $this->assertNull($email->bcc_address);
+        $this->assertEquals($this->stubSubject, $email->subject);
         $this->assertNull($email->text_body);
         $this->assertNull($email->html_body);
+        $this->assertEquals(0, $email->attempts_count);
+        $this->assertNotNull($email->updated_at);
+        $this->assertNotNull($email->created_at);
         $this->assertNull($email->error);
     }
 
     public function testCreateMassAssignment_AllowedFields()
     {
-        $timestamp = microtime();
-        $attributes = [
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
-            'subject' => $timestamp,
-            'text_body' => 'text body',
-            'html_body' => 'html body',
+        $email = new Email();
+
+        $email->attributes = [
+            'to_address' => $this->stubToAddress,
+            'cc_address' => $this->stubCcAddress,
+            'bcc_address' => $this->stubBccAddress,
+            'subject' => $this->stubSubject,
+            'text_body' => $this->stubTextBody,
+            'html_body' => $this->stubHtmlBody,
         ];
 
-        $email = new Email();
-        $email->attributes = $attributes;
-        $this->assertTrue(
-            $email->save(),
-            'Failed to save with allowed fields: ' . print_r($email->getFirstErrors(), true)
-        );
-
-        $this->assertEquals($attributes['to_address'], $email->to_address);
-        $this->assertEquals($attributes['cc_address'], $email->cc_address);
-        $this->assertEquals($attributes['bcc_address'], $email->bcc_address);
-        $this->assertEquals($attributes['subject'], $email->subject);
-        $this->assertEquals($attributes['text_body'], $email->text_body);
-        $this->assertEquals($attributes['html_body'], $email->html_body);
-        $this->assertEquals(0, $email->attempts_count);
+        $this->assertTrue($email->save(), current($email->getFirstErrors()));
 
         $this->assertNotNull($email->id);
-        $this->assertNotNull($email->created_at);
+        $this->assertEquals($this->stubToAddress, $email->to_address);
+        $this->assertEquals($this->stubCcAddress, $email->cc_address);
+        $this->assertEquals($this->stubBccAddress, $email->bcc_address);
+        $this->assertEquals($this->stubSubject, $email->subject);
+        $this->assertEquals($this->stubTextBody, $email->text_body);
+        $this->assertEquals($this->stubHtmlBody, $email->html_body);
+        $this->assertEquals(0, $email->attempts_count);
         $this->assertNotNull($email->updated_at);
-
+        $this->assertNotNull($email->created_at);
         $this->assertNull($email->error);
     }
 
     public function testCreateMassAssignment_AllFields()
     {
-        $this->markTestSkipped('Skipping until scenarios are built to prevent mass assignment of unsafe attributes');
-        $timestamp = microtime();
-        $attributes = [
-            'id' => 123,
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
-            'subject' => $timestamp,
-            'text_body' => 'text body',
-            'html_body' => 'html body',
-            'attempts_count' => 111,
-            'created_at' => 11111111,
-            'updated_at' => 22222222,
-            'error' => 'error message',
-        ];
+        $stubId = 123;
+        $stubUpdateAt = 22222222;
+        $stubCreatedAt = 11111111;
+        $stubErrorMessage = 'stub error message';
 
         $email = new Email();
-        $email->attributes = $attributes;
-        $this->assertTrue(
-            $email->save(),
-            'Failed to save with all fields: ' . print_r($email->getFirstErrors(), true)
-        );
 
-        $this->assertEquals($attributes['to_address'], $email->to_address);
-        $this->assertEquals($attributes['cc_address'], $email->cc_address);
-        $this->assertEquals($attributes['bcc_address'], $email->bcc_address);
-        $this->assertEquals($attributes['subject'], $email->subject);
-        $this->assertEquals($attributes['text_body'], $email->text_body);
-        $this->assertEquals($attributes['html_body'], $email->html_body);
+        $email->attributes = [
+            'id' => $stubId,
+            'to_address' => $this->stubToAddress,
+            'cc_address' => $this->stubCcAddress,
+            'bcc_address' => $this->stubBccAddress,
+            'subject' => $this->stubSubject,
+            'text_body' => $this->stubTextBody,
+            'html_body' => $this->stubHtmlBody,
+            'attempts_count' => 111,
+            'updated_at' => $stubUpdateAt,
+            'created_at' => $stubCreatedAt,
+            'error' => $stubErrorMessage,
+        ];
+
+        $this->assertTrue($email->save(), current($email->getFirstErrors()));
+
+        $this->assertNotEquals($stubId, $email->id);
+        $this->assertEquals($this->stubToAddress, $email->to_address);
+        $this->assertEquals($this->stubCcAddress, $email->cc_address);
+        $this->assertEquals($this->stubBccAddress, $email->bcc_address);
+        $this->assertEquals($this->stubSubject, $email->subject);
+        $this->assertEquals($this->stubTextBody, $email->text_body);
+        $this->assertEquals($this->stubHtmlBody, $email->html_body);
         $this->assertEquals(0, $email->attempts_count);
-
-        $this->assertNotEquals($attributes['id'], $email->id);
-        $this->assertNotEquals($attributes['attempts_count'], $email->attempts_count);
-        $this->assertNotEquals($attributes['created_at'], $email->created_at);
-        $this->assertNotEquals($attributes['updated_at'], $email->updated_at);
-        $this->assertNotEquals($attributes['error'], $email->error);
+        $this->assertNotEquals($stubUpdateAt, $email->updated_at);
+        $this->assertNotEquals($stubCreatedAt, $email->created_at);
+        $this->assertNotEquals($stubErrorMessage, $email->error);
     }
 
     public function testSend()
@@ -130,26 +124,24 @@ class EmailTest extends Test
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
-        $timestamp = microtime();
-        $attributes = [
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
-            'subject' => $timestamp,
-            'text_body' => 'text body',
-            'html_body' => 'html body',
+        $email = new Email();
+
+        $email->attributes = [
+            'to_address' => $this->stubToAddress,
+            'cc_address' => $this->stubCcAddress,
+            'bcc_address' => $this->stubBccAddress,
+            'subject' => $this->stubSubject,
+            'text_body' => $this->stubTextBody,
+            'html_body' => $this->stubHtmlBody,
         ];
 
-        $email = new Email();
-        $email->attributes = $attributes;
-        $this->assertTrue(
-            $email->save(),
-            'Failed to save when creating email to send: ' . print_r($email->getFirstErrors(), true)
-        );
+        $this->assertTrue($email->save(), current($email->getFirstErrors()));
 
-        $this->assertEquals($initialEmailQueueCount+1, Email::find()->count(), 'emails in db did not increase by one after saving email');
+        $this->assertEquals($initialEmailQueueCount + 1, Email::find()->count(), 'emails in db did not increase by one after saving email');
+
         $email->send();
-        $this->assertEquals($initialEmailSentCount+1, $this->countMailFiles(), 'sent emails count did not increase by one after sending email');
+
+        $this->assertEquals($initialEmailSentCount + 1, $this->countMailFiles(), 'sent emails count did not increase by one after sending email');
         $this->assertEquals($initialEmailQueueCount, Email::find()->count(), 'emails in db did not decrease by one after sending email');
     }
 
@@ -158,52 +150,48 @@ class EmailTest extends Test
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
-        $timestamp = microtime();
-        $attributes = [
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
-            'subject' => $timestamp,
-            'text_body' => 'text body',
-            'html_body' => 'html body',
+        $email = new Email();
+
+        $email->attributes = [
+            'to_address' => $this->stubToAddress,
+            'cc_address' => $this->stubCcAddress,
+            'bcc_address' => $this->stubBccAddress,
+            'subject' => $this->stubSubject,
+            'text_body' => $this->stubTextBody,
+            'html_body' => $this->stubHtmlBody,
         ];
 
-        $email = new Email();
-        $email->attributes = $attributes;
-        $this->assertTrue(
-            $email->save(),
-            'Failed to save when creating email to send: ' . print_r($email->getFirstErrors(), true)
-        );
+        $this->assertTrue($email->save(), current($email->getFirstErrors()));
 
-        $this->assertEquals($initialEmailQueueCount+1, Email::find()->count(), 'emails in db did not increase by one after saving email');
+        $this->assertEquals($initialEmailQueueCount + 1, Email::find()->count(), 'emails in db did not increase by one after saving email');
+
         $email->retry();
-        $this->assertEquals($initialEmailSentCount+1, $this->countMailFiles(), 'sent emails count did not increase by one after sending email');
+
+        $this->assertEquals($initialEmailSentCount + 1, $this->countMailFiles(), 'sent emails count did not increase by one after sending email');
         $this->assertEquals($initialEmailQueueCount, Email::find()->count(), 'emails in db did not decrease by one after sending email');
     }
 
     public function testGetMessageRendersAsHtmlAndText()
     {
-        $timestamp = microtime();
-        $attributes = [
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
-            'subject' => $timestamp,
-            'text_body' => 'text body',
-            'html_body' => '<b>html body</b>',
+        $email = new Email();
+
+        $email->attributes = [
+            'to_address' => $this->stubToAddress,
+            'cc_address' => $this->stubCcAddress,
+            'bcc_address' => $this->stubBccAddress,
+            'subject' => $this->stubSubject,
+            'text_body' => $this->stubTextBody,
+            'html_body' => $this->stubHtmlBody,
         ];
 
-        $email = new Email();
-        $email->attributes = $attributes;
-        $this->assertTrue(
-            $email->save(),
-            'Failed to save with allowed fields: ' . print_r($email->getFirstErrors(), true)
-        );
+        $this->assertTrue($email->save(), current($email->getFirstErrors()));
 
         $email->send();
+
         /** @var yii\mail\Message[] $sent */
         $sent = $this->tester->grabSentEmails();
         $asString = $sent[0]->toString();
+
         $this->assertContains('text/plain', $asString);
         $this->assertContains('text/html', $asString);
         $this->assertContains('<!DOCTYPE html PUBLIC', $asString);
@@ -214,33 +202,29 @@ class EmailTest extends Test
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
-        $timestamp = microtime();
-        $attributes = [
-            'to_address' => 'test@test.com',
-            'cc_address' => 'testcc@test.com',
-            'bcc_address' => 'testbcc@test.com',
-            'subject' => $timestamp,
-            'text_body' => 'text body',
-            'html_body' => '<b>html body</b>',
-        ];
-
         // create 5 queued emails
-        for ($i=0; $i<5; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $email = new Email();
-            $email->attributes = $attributes;
-            $this->assertTrue(
-                $email->save(),
-                'Failed to save with allowed fields: ' . print_r($email->getFirstErrors(), true)
-            );
+
+            $email->attributes = [
+                'to_address' => $this->stubToAddress,
+                'cc_address' => $this->stubCcAddress,
+                'bcc_address' => $this->stubBccAddress,
+                'subject' => $this->stubSubject." $i",
+                'text_body' => $this->stubTextBody,
+                'html_body' => $this->stubHtmlBody,
+            ];
+
+            $this->assertTrue($email->save(), current($email->getFirstErrors()));
         }
 
         $this->assertEquals($initialEmailQueueCount + 5, Email::find()->count());
+
         Email::sendQueuedEmail();
+
         $this->assertEquals(0, Email::find()->count());
         $this->assertEquals($initialEmailSentCount + 5, $this->countMailFiles());
-
     }
-
 
     public function countMailFiles()
     {
