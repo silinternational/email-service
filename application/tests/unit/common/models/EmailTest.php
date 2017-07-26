@@ -14,16 +14,13 @@ include_once __DIR__ . '/../../../_support/UnitTester.php';
  */
 class EmailTest extends Test
 {
-    public function _fixtures()
+    protected function _before()
     {
-        return [
-            //'emails' => EmailFixture::className(),
-        ];
+        Email::deleteAll();
     }
 
     public function testCreateMassAssignment_MinimumFields()
     {
-        Email::deleteAll();
         $timestamp = microtime();
         $attributes = [
             'to_address' => 'test@test.com',
@@ -56,7 +53,6 @@ class EmailTest extends Test
 
     public function testCreateMassAssignment_AllowedFields()
     {
-        Email::deleteAll();
         $timestamp = microtime();
         $attributes = [
             'to_address' => 'test@test.com',
@@ -91,7 +87,6 @@ class EmailTest extends Test
 
     public function testCreateMassAssignment_AllFields()
     {
-        Email::deleteAll();
         $this->markTestSkipped('Skipping until scenarios are built to prevent mass assignment of unsafe attributes');
         $timestamp = microtime();
         $attributes = [
@@ -132,7 +127,6 @@ class EmailTest extends Test
 
     public function testSend()
     {
-        Email::deleteAll();
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
@@ -161,7 +155,6 @@ class EmailTest extends Test
 
     public function testRetry()
     {
-        Email::deleteAll();
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
@@ -190,7 +183,6 @@ class EmailTest extends Test
 
     public function testGetMessageRendersAsHtmlAndText()
     {
-        Email::deleteAll();
         $timestamp = microtime();
         $attributes = [
             'to_address' => 'test@test.com',
@@ -219,7 +211,6 @@ class EmailTest extends Test
 
     public function testSendQueuedEmails()
     {
-        Email::deleteAll();
         $initialEmailQueueCount = Email::find()->count();
         $initialEmailSentCount = $this->countMailFiles();
 
