@@ -27,6 +27,7 @@ class Email extends EmailBase
     public function rules()
     {
         return ArrayHelper::merge(
+            parent::rules(),
             [
                 [
                     'attempts_count', 'default', 'value' => 0,
@@ -39,8 +40,7 @@ class Email extends EmailBase
                         return empty($model->html_body);
                     },
                 ],
-            ],
-            parent::rules()
+            ]
         );
     }
 
@@ -236,31 +236,25 @@ class Email extends EmailBase
         }
     }
 
-//    /** TODO: update for this service
-//     * @return array of fields that should be included in responses.
-//     */
-//    public function fields(): array
-//    {
-//        $fields = [
-//            'uuid',
-//            'employee_id',
-//            'first_name',
-//            'last_name',
-//            'display_name' => function ($model) {
-//                return $model->display_name ?? "$model->first_name $model->last_name";
-//            },
-//            'username',
-//            'email',
-//            'active',
-//            'locked',
-//        ];
-//
-//        if ($this->current_password_id !== null) {
-//            $fields['password'] = function () {
-//                return $this->currentPassword;
-//            };
-//        }
-//
-//        return $fields;
-//    }
+    /**
+     * @return array of fields that should be included in responses.
+     */
+    public function fields(): array
+    {
+        $fields = [
+            'id',
+            'to_address',
+            'cc_address',
+            'bcc_address',
+            'subject',
+            'text_body',
+            'html_body',
+            'attempts_count',
+            'updated_at',
+            'created_at',
+            'error',
+        ];
+
+        return $fields;
+    }
 }
