@@ -28,14 +28,39 @@ class EmailTest extends Test
         $this->stubSubject = 'tested at '.microtime();
     }
 
-    public function testCreateMassAssignment_MinimumFields()
+    public function testCreateMassAssignment_MinimumFields_TextBody()
     {
         $email = new Email();
 
         $email->attributes = [
             'to_address' => $this->stubToAddress,
             'subject' => $this->stubSubject,
-            //TODO: need to have a body as well.
+            'text_body' => $this->stubTextBody,
+        ];
+
+        $this->assertTrue($email->save(), current($email->getFirstErrors()));
+
+        $this->assertNotNull($email->id);
+        $this->assertEquals($this->stubToAddress, $email->to_address);
+        $this->assertNull($email->cc_address);
+        $this->assertNull($email->bcc_address);
+        $this->assertEquals($this->stubSubject, $email->subject);
+        $this->assertEquals($this->stubTextBody, $email->text_body);
+        $this->assertNull($email->html_body);
+        $this->assertEquals(0, $email->attempts_count);
+        $this->assertNotNull($email->updated_at);
+        $this->assertNotNull($email->created_at);
+        $this->assertNull($email->error);
+    }
+
+    public function testCreateMassAssignment_MinimumFields_HtmlBody()
+    {
+        $email = new Email();
+
+        $email->attributes = [
+            'to_address' => $this->stubToAddress,
+            'subject' => $this->stubSubject,
+            'html_body' => $this->stubHtmlBody,
         ];
 
         $this->assertTrue($email->save(), current($email->getFirstErrors()));
@@ -46,7 +71,7 @@ class EmailTest extends Test
         $this->assertNull($email->bcc_address);
         $this->assertEquals($this->stubSubject, $email->subject);
         $this->assertNull($email->text_body);
-        $this->assertNull($email->html_body);
+        $this->assertEquals($this->stubHtmlBody, $email->html_body);
         $this->assertEquals(0, $email->attempts_count);
         $this->assertNotNull($email->updated_at);
         $this->assertNotNull($email->created_at);
@@ -226,7 +251,7 @@ class EmailTest extends Test
         $this->assertEquals($initialEmailSentCount + 5, $this->countMailFiles());
     }
 
-    public function countMailFiles()
+    private function countMailFiles()
     {
         return count($this->tester->grabSentEmails());
     }

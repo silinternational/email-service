@@ -34,11 +34,14 @@ class Email extends EmailBase
                 [
                     ['to_address', 'cc_address', 'bcc_address'], 'email',
                 ],
+                [
+                    'text_body', 'required', 'when' => function ($model) {
+                        return empty($model->html_body);
+                    },
+                ],
             ],
             parent::rules()
         );
-
-//TODO: add rule to require some content (text or html and non-empty)
     }
 
     public function behaviors()
