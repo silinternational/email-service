@@ -2,19 +2,6 @@
 
 class EmailCest
 {
-    public function _before(ApiTester $I)
-    {
-    }
-
-    public function _after(ApiTester $I)
-    {
-    }
-
-    // tests
-    public function tryToTest(ApiTester $I)
-    {
-    }
-
     public function testQueue_NoAccessToken(ApiTester $I)
     {
         $I->wantTo('queue an email without a bearer access token');
@@ -30,17 +17,28 @@ class EmailCest
         $I->seeResponseCodeIs(401);
     }
 
-    public function testQueue_MinimumFields(ApiTester $I)
+    public function testQueue_MinimumFields_TextBody(ApiTester $I)
     {
-        $I->wantTo('queue an email with minimum fields');
+        $I->wantTo('queue an email with minimum fields using a text body');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
             'to_address' => 'test@test.com',
-            'subject' => 'test subject min fields',
+            'subject' => 'test subject min fields (text body)',
             'text_body' => 'text body',
         ]);
         $I->seeResponseCodeIs(200);
-//        TODO: need another test with html_body only
+    }
+
+    public function testQueue_MinimumFields_HtmlBody(ApiTester $I)
+    {
+        $I->wantTo('queue an email with minimum fields using an html body');
+        $I->haveHttpHeader('Authorization', 'Bearer abc123');
+        $I->sendPOST('/email', [
+            'to_address' => 'test@test.com',
+            'subject' => 'test subject min fields (html body)',
+            'html_body' => '<p>html body</p>',
+        ]);
+        $I->seeResponseCodeIs(200);
     }
 
     public function testQueue_AllowedFields(ApiTester $I)
