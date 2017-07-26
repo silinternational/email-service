@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
 use yii\web\ServerErrorHttpException;
 
@@ -17,7 +18,6 @@ class Email extends EmailBase
                 'subject',
                 'text_body',
                 'html_body',
-                '!created_at', //TODO: might remove after using timestampbehavior
             ],
         ];
 
@@ -31,10 +31,6 @@ class Email extends EmailBase
                 [
                     'attempts_count', 'default', 'value' => 0,
                 ],
-//TODO: look at http://www.yiiframework.com/doc-2.0/yii-behaviors-timestampbehavior.html
-                [
-                    'created_at', 'default', 'value' => time(),
-                ],
                 [
                     ['to_address', 'cc_address', 'bcc_address'], 'email',
                 ],
@@ -43,6 +39,14 @@ class Email extends EmailBase
         );
 
 //TODO: add rule to require some content (text or html and non-empty)
+    }
+
+    public function behaviors()
+    {
+        // http://www.yiiframework.com/doc-2.0/yii-behaviors-timestampbehavior.html
+        return [
+            TimestampBehavior::className(),
+        ];
     }
 
     /**

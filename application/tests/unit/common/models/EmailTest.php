@@ -4,7 +4,6 @@ namespace tests\unit\common\models;
 
 use common\models\Email;
 use Sil\Codeception\TestCase\Test;
-use tests\unit\fixtures\common\models\EmailFixture;
 
 include_once __DIR__ . '/../../../_support/UnitTester.php';
 
@@ -29,9 +28,11 @@ class EmailTest extends Test
         $attributes = [
             'to_address' => 'test@test.com',
             'subject' => (string)$timestamp,
+            //TODO: need to have a body as well.
         ];
 
         $email = new Email();
+
         $email->attributes = $attributes;
         $this->assertTrue(
             $email->save(),
@@ -44,12 +45,12 @@ class EmailTest extends Test
 
         $this->assertNotNull($email->id);
         $this->assertNotNull($email->created_at);
+        $this->assertNotNull($email->updated_at);
 
         $this->assertNull($email->cc_address);
         $this->assertNull($email->bcc_address);
         $this->assertNull($email->text_body);
         $this->assertNull($email->html_body);
-        $this->assertNull($email->updated_at);
         $this->assertNull($email->error);
     }
 
@@ -83,8 +84,8 @@ class EmailTest extends Test
 
         $this->assertNotNull($email->id);
         $this->assertNotNull($email->created_at);
+        $this->assertNotNull($email->updated_at);
 
-        $this->assertNull($email->updated_at);
         $this->assertNull($email->error);
     }
 
