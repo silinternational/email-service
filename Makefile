@@ -1,6 +1,6 @@
 init: deps db tables basemodels app test
 
-app: db deps
+app: db
 	docker-compose up -d app phpmyadmin
 
 deps:
@@ -29,6 +29,9 @@ testunit:
 # would be best to have an additional container for testing becasue I don't think the env vars are being honored on the command line the way we think they are.
 testapi:
 	APP_ENV=test docker-compose run --rm app /data/run-tests-api.sh
+
+cron: db
+	docker-compose up -d cron
 
 clean:
 	docker-compose kill
