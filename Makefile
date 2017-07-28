@@ -31,7 +31,7 @@ testapi:
 	APP_ENV=test docker-compose run --rm app /data/run-tests-api.sh
 
 cron: db
-	docker-compose up -d cron
+	docker-compose run --rm cron ./yii send/send-queued-email
 
 clean:
 	docker-compose kill

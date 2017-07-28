@@ -219,7 +219,7 @@ class EmailTest extends Test
 
         $this->assertContains('text/plain', $asString);
         $this->assertContains('text/html', $asString);
-        $this->assertContains('<!DOCTYPE html PUBLIC', $asString);
+        $this->assertContains('<!DOCTYPE html', $asString);
     }
 
     public function testSendQueuedEmails()

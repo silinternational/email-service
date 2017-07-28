@@ -1,24 +1,31 @@
 <?php
-use yii\helpers\Html;
-
-//TODO: make this layout brandable
-
-/* @var $this \yii\web\View view component instance */
-/* @var $message \yii\mail\MessageInterface the message being composed */
-/* @var $content string main view render result */
+use Sil\PhpEnv\Env;
 ?>
-<?php $this->beginPage() ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?= Yii::$app->charset ?>" />
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
+    <meta charset="utf-8" />
 </head>
 <body>
-<?php $this->beginBody() ?>
-<?= $content ?>
-<?php $this->endBody() ?>
+    <?php
+    $brandColor = Env::get('EMAIL_BRAND_COLOR', '');
+    $logo = Env::get('EMAIL_BRAND_LOGO', '');
+    ?>
+    <header>
+        <table style="background-color: <?= $brandColor ?>; width: 100%">
+            <tr>
+                <td>
+                    <img src="<?= $logo ?>" style="max-height: 4em; vertical-align: middle">
+                </td>
+            </tr>
+        </table>
+    </header>
+
+    <main>
+        <?php
+        /* @var $content string email contents */
+        ?>
+        <?= $content ?>
+    </main>
 </body>
 </html>
-<?php $this->endPage() ?>
