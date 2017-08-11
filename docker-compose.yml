@@ -17,7 +17,7 @@ services:
         volumes_from:
             - data
         ports:
-            - "8080:80"
+            - "8888:80"
         depends_on:
             - db
         env_file:

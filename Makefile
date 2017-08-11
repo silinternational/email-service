@@ -1,7 +1,7 @@
-init: deps db tables basemodels app test
+start: deps db tables basemodels app
 
 app: db
-	docker-compose up -d app phpmyadmin
+	docker-compose up -d app cron phpmyadmin
 
 deps:
 	docker-compose run --rm cli composer install

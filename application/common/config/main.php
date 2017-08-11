@@ -43,7 +43,7 @@ return [
                     'message' => [
                         'from' => $mailerUsername,
                         'to' => $notificationEmail,
-                        'subject' => "ERROR - $appName-email-service [".YII_ENV."] Error",
+                        'subject' => "ERROR - $appName [".YII_ENV."] Error",
                     ],
                 ],
             ],
