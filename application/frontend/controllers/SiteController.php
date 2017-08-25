@@ -27,6 +27,7 @@ class SiteController extends Controller
             // db comms are a good indication of health
             Yii::$app->db->open();
         } catch (Exception $e) {
+            \Yii::error($e->getMessage());
             throw new ServerErrorHttpException(
                 'Database connection problem.', $e->getCode()
             );
