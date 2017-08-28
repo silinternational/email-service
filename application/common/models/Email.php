@@ -2,75 +2,54 @@
 
 namespace common\models;
 
+use yii\behaviors\TimestampBehavior;
 use yii\helpers\ArrayHelper;
+use yii\web\ServerErrorHttpException;
 
 class Email extends EmailBase
 {
+    public function scenarios()
+    {
+        $scenarios = [
+            self::SCENARIO_DEFAULT => [
+                'to_address',
+                'cc_address',
+                'bcc_address',
+                'subject',
+                'text_body',
+                'html_body',
+            ],
+        ];
+
+        return $scenarios;
+    }
+
     public function rules()
     {
         return ArrayHelper::merge(
+            parent::rules(),
             [
                 [
                     'attempts_count', 'default', 'value' => 0,
                 ],
                 [
-                    'created_on', 'default', 'value' => time(),
-                ],
-                [
                     ['to_address', 'cc_address', 'bcc_address'], 'email',
                 ],
-            ],
-            parent::rules()
+                [
+                    'text_body', 'required', 'when' => function ($model) {
+                        return empty($model->html_body);
+                    },
+                ],
+            ]
         );
     }
 
-    /**
-     * Attempt to send an email, but on error queue it.
-     * Throws exception if send and queue fail
-     * @param string $toAddress
-     * @param string $subject
-     * @param string $textBody
-     * @param null|string $htmlBody
-     * @param null|string $ccAddress
-     * @param null|integer $eventLogUserId
-     * @param null|string $eventLogTopic
-     * @param null|string $eventLogDetails
-     * @return EmailQueue
-     * @throws \Exception
-     */
-    public static function sendOrQueue(
-        $toAddress,
-        $subject,
-        $textBody,
-        $htmlBody = null,
-        $ccAddress = null,
-        $eventLogUserId = null,
-        $eventLogTopic = null,
-        $eventLogDetails = null
-    ) {
-        $emailQueue = new EmailQueue();
-        $emailQueue->to_address = $toAddress;
-        $emailQueue->subject = $subject;
-        $emailQueue->text_body = $textBody;
-        $emailQueue->html_body = $htmlBody;
-        $emailQueue->cc_address = $ccAddress;
-        $emailQueue->event_log_user_id = $eventLogUserId;
-        $emailQueue->event_log_topic = $eventLogTopic;
-        $emailQueue->event_log_details = $eventLogDetails;
-
-        try {
-            $emailQueue->send();
-        } catch (\Exception $e) {
-            /*
-             * Send failed, attempt to queue
-             */
-            $emailQueue->attempts_count += 1;
-            $emailQueue->last_attempt = Utils::getDatetime();
-            $emailQueue->queue();
-        }
-
-
-        return $emailQueue;
+    public function behaviors()
+    {
+        // http://www.yiiframework.com/doc-2.0/yii-behaviors-timestampbehavior.html
+        return [
+            TimestampBehavior::className(),
+        ];
     }
 
     /**
@@ -82,8 +61,7 @@ class Email extends EmailBase
     public function send()
     {
         $log = [
-            'class' => __CLASS__,
-            'action' => 'send',
+            'action' => 'send email',
             'to' => $this->to_address,
             'subject' => $this->subject,
         ];
@@ -98,11 +76,6 @@ class Email extends EmailBase
             }
 
             /*
-             * Create event log entry if needed
-             */
-            $this->createEventLogEntry();
-
-            /*
              * Remove entry from queue (if saved to queue) after successful send
              */
             $this->removeFromQueue();
@@ -111,7 +84,7 @@ class Email extends EmailBase
              * Log success
              */
             $log['status'] = 'sent';
-            \Yii::warning($log, 'application');
+            \Yii::info($log, 'application');
 
         } catch (\Exception $e) {
             throw $e;
@@ -131,19 +104,29 @@ class Email extends EmailBase
              * Send failed, attempt to queue
              */
             $this->attempts_count += 1;
-            $this->last_attempt = Utils::getDatetime();
+            $this->updated_at = time();
 
             $log = [
-                'class' => __CLASS__,
-                'action' => 'retry',
+                'action' => 'retry sending email',
                 'to' => $this->to_address,
                 'subject' => $this->subject,
                 'attempts_count' => $this->attempts_count,
-                'last_attempt' => $this->last_attempt,
+                'last_attempt' => $this->updated_at,
             ];
             \Yii::error($log);
 
-            $this->queue($log, $e);
+            if ( ! $this->save()) {
+                \Yii::error([
+                    'action' => 'save email after failed retry failed',
+                    'status' => 'error',
+                    'error' => $this->getFirstErrors(),
+                ]);
+                throw new ServerErrorHttpException(
+                    'Unable to save email after failing to retry sending. Error: ' .
+                        print_r($this->getFirstErrors(), true),
+                    1500649788
+                );
+            }
         }
     }
 
@@ -151,20 +134,28 @@ class Email extends EmailBase
      * Builds a mailer object from $this and returns it
      * @return \yii\mail\MessageInterface
      */
-    private function getMessage()
+    public function getMessage()
     {
-        $mailer = \Yii::$app->mailer->compose();
+        $mailer = \Yii::$app->mailer->compose(
+            [
+                'html' => '@common/mail/html',
+                'text' => '@common/mail/text'
+            ],
+            [
+                'html' => $this->html_body,
+                'text' => $this->text_body
+            ]
+        );
         $mailer->setFrom(\Yii::$app->params['fromEmail']);
         $mailer->setTo($this->to_address);
         $mailer->setSubject($this->subject);
-        $mailer->setTextBody($this->text_body);
 
         /*
          * Conditionally set optional fields
          */
         $setMethods = [
             'setCc' => $this->cc_address,
-            'setHtmlBody' => $this->html_body,
+            'setBcc' => $this->bcc_address,
         ];
         foreach ($setMethods as $method => $value) {
             if ($value) {
@@ -176,50 +167,45 @@ class Email extends EmailBase
     }
 
     /**
-     * Creates an EventLog entry if $this->event_log_* properties are set
-     * @return boolean
+     * Attempt to send messages from queue
      * @throws \Exception
      */
-    private function createEventLogEntry()
-    {
-        if ($this->event_log_topic !== null && $this->event_log_details !== null && $this->event_log_user_id !== null) {
-            EventLog::log($this->event_log_topic, $this->event_log_details, $this->event_log_user_id);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Queue's email for sending later, if there is an error saving to db it throws an exception
-     * @throws \Exception
-     */
-    private function queue()
+    public static function sendQueuedEmail()
     {
         $log = [
-            'class' => __CLASS__,
-            'action' => 'queue',
-            'to' => $this->to_address,
-            'subject' => $this->subject,
-            'attempts_count' => $this->attempts_count,
-            'last_attempt' => $this->last_attempt,
+            'action' => 'email/sendQueuedEmail',
         ];
+        try {
+            $batchSize = \Yii::$app->params['emailQueueBatchSize'];
+            $queued = self::find()->orderBy(['updated_at' => SORT_ASC])->limit($batchSize)->all();
 
-        if ( ! $this->save()) {
-            /*
-             * Queue failed, log it and throw exception
-             */
-            $log['status'] = 'failed to queue';
-            $log['error'] = Json::encode($this->getFirstErrors());
-            \Yii::error($log, 'application');
-            throw new \Exception('Unable to queue email: ' . $log['error'], 1461009236);
+            $log += [
+                'batchSize' => $batchSize,
+                'queuedEmails' => count($queued),
+                'sentEmails' => 0,
+            ];
+
+            if (empty($queued)) {
+                // If nothing queued, no need to send log
+                return;
+            }
+
+            /** @var Email $email */
+            foreach ($queued as $email) {
+                $email->retry();
+                $log['sentEmails']++;
+            }
+        } catch (\Exception $e) {
+            $log += [
+                'status' => 'error',
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+            \Yii::error($log);
         }
 
-        /*
-         * Email queued, log it
-         */
-        $log['status'] = 'queued';
-        \Yii::warning($log, 'application');
+        // Send log of successful processing
+        \Yii::info($log);
     }
 
     /**
@@ -237,7 +223,6 @@ class Email extends EmailBase
             }
         } catch (\Exception $e) {
             $log = [
-                'class' => __CLASS__,
                 'action' => 'delete after send',
                 'status' => 'failed to delete',
                 'error' => $e->getMessage(),
@@ -251,5 +236,25 @@ class Email extends EmailBase
         }
     }
 
+    /**
+     * @return array of fields that should be included in responses.
+     */
+    public function fields(): array
+    {
+        $fields = [
+            'id',
+            'to_address',
+            'cc_address',
+            'bcc_address',
+            'subject',
+            'text_body',
+            'html_body',
+            'attempts_count',
+            'updated_at',
+            'created_at',
+            'error',
+        ];
 
+        return $fields;
+    }
 }

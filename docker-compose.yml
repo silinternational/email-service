@@ -4,7 +4,6 @@ services:
         image: silintl/data-volume:latest
         volumes:
             - ./application:/data
-            - ./auth.json:/root/.composer/auth.json
 
     db:
         image: silintl/mariadb:latest
@@ -18,11 +17,30 @@ services:
         volumes_from:
             - data
         ports:
-            - "8080:80"
+            - "8888:80"
         depends_on:
             - db
         env_file:
             - ./local.env
+
+    cron:
+        build: ./
+        volumes_from:
+            - data
+        depends_on:
+            - db
+        env_file:
+            - ./local.env
+        command: /data/run-cron.sh
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin:latest
+        ports:
+            - "8001:80"
+        environment:
+            PMA_HOST: db
+            PMA_USER: email
+            PMA_PASSWORD: email
 
     cli:
         image: silintl/php7:latest
@@ -32,16 +50,3 @@ services:
         env_file:
             - ./local.env
         command: ["true"]
-
-    test:
-        image: silintl/php7:latest
-        volumes_from:
-            - data
-        working_dir: /data
-        depends_on:
-            - app
-        env_file:
-            - ./local.env
-        environment:
-            APP_ENV: test
-        command: ./run-tests.sh

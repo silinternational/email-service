@@ -15,8 +15,8 @@ use Yii;
  * @property string $text_body
  * @property string $html_body
  * @property integer $attempts_count
- * @property string $updated_on
- * @property string $created_on
+ * @property integer $updated_at
+ * @property integer $created_at
  * @property string $error
  */
 class EmailBase extends \yii\db\ActiveRecord
@@ -35,10 +35,9 @@ class EmailBase extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['to_address', 'subject'], 'required'],
+            [['to_address', 'subject', 'created_at'], 'required'],
             [['text_body', 'html_body'], 'string'],
-            [['attempts_count'], 'integer'],
-            [['updated_on', 'created_on'], 'safe'],
+            [['attempts_count', 'updated_at', 'created_at'], 'integer'],
             [['to_address', 'cc_address', 'bcc_address', 'subject', 'error'], 'string', 'max' => 255],
         ];
     }
@@ -57,8 +56,8 @@ class EmailBase extends \yii\db\ActiveRecord
             'text_body' => Yii::t('app', 'Text Body'),
             'html_body' => Yii::t('app', 'Html Body'),
             'attempts_count' => Yii::t('app', 'Attempts Count'),
-            'updated_on' => Yii::t('app', 'Updated On'),
-            'created_on' => Yii::t('app', 'Created On'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'created_at' => Yii::t('app', 'Created At'),
             'error' => Yii::t('app', 'Error'),
         ];
     }

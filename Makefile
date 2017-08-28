@@ -1,7 +1,7 @@
-start: app
+start: deps db tables basemodels app
 
-app: db deps
-	docker-compose up -d app
+app: db
+	docker-compose up -d app cron phpmyadmin
 
 deps:
 	docker-compose run --rm cli composer install
@@ -15,14 +15,23 @@ db:
 tables: db
 	docker-compose run --rm cli whenavail db 3306 100 ./yii migrate --interactive=0
 
-basemodels: db tables
+basemodels: tables
 	docker-compose run --rm cli whenavail db 3306 100 ./rebuildbasemodels.sh
 
-quicktest:
-	docker-compose run --rm test bash -c "vendor/bin/behat --stop-on-failure --strict --append-snippets"
-
 test: app
-	docker-compose run --rm test
+	make testunit
+	make testapi
+
+testunit:
+	APP_ENV=test docker-compose run --rm app /data/run-tests.sh
+
+#TODO: tests api won't run unless the access keys are abc-123, need to change that so test will run out-of-box.
+# would be best to have an additional container for testing becasue I don't think the env vars are being honored on the command line the way we think they are.
+testapi:
+	APP_ENV=test docker-compose run --rm app /data/run-tests-api.sh
+
+cron: db
+	docker-compose run --rm cron ./yii send/send-queued-email
 
 clean:
 	docker-compose kill

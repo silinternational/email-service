@@ -1,0 +1,2 @@
+# m h dom mon dow user	command
+* * * * * root runny /data/yii send/send-queued-email

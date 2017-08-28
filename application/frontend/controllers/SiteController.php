@@ -2,12 +2,12 @@
 namespace frontend\controllers;
 
 use Exception;
-use frontend\components\BaseRestController;
 use Yii;
+use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
-class SiteController extends BaseRestController
+class SiteController extends Controller
 {
     public function behaviors()
     {
@@ -27,6 +27,7 @@ class SiteController extends BaseRestController
             // db comms are a good indication of health
             Yii::$app->db->open();
         } catch (Exception $e) {
+            \Yii::error($e->getMessage());
             throw new ServerErrorHttpException(
                 'Database connection problem.', $e->getCode()
             );
