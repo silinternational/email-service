@@ -6,6 +6,16 @@ try {
     $config = require('../config/load-configs.php');
     $application = new yii\web\Application($config);
     $application->run();
+} catch (yii\web\HttpException $e) {
+    
+    // Log to syslog (Logentries).
+    openlog('email-service', LOG_NDELAY | LOG_PERROR, LOG_USER);
+    syslog(LOG_CRIT, $e->getMessage());
+    closelog();
+    
+    // Let the error bubble on up.
+    throw $e;
+    
 } catch (\Throwable $t) {
     
     // Log to syslog (Logentries).
