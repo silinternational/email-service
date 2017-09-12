@@ -4,6 +4,8 @@ try {
     /* NOTE: The composer autoloader will be one of the first things loaded by
      *       this required file.  */
     $config = require('../config/load-configs.php');
+    $application = new yii\web\Application($config);
+    $application->run();
 } catch (Sil\PhpEnv\EnvVarNotFoundException $e) {
     
     // Log to syslog (Logentries).
@@ -21,6 +23,3 @@ try {
     ], JSON_PRETTY_PRINT);
     exit($responseContent);
 }
-
-$application = new yii\web\Application($config);
-$application->run();
