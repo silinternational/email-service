@@ -6,11 +6,11 @@ try {
     $config = require('../config/load-configs.php');
     $application = new yii\web\Application($config);
     $application->run();
-} catch (Sil\PhpEnv\EnvVarNotFoundException $e) {
+} catch (\Throwable $t) {
     
     // Log to syslog (Logentries).
     openlog('email-service', LOG_NDELAY | LOG_PERROR, LOG_USER);
-    syslog(LOG_CRIT, $e->getMessage());
+    syslog(LOG_CRIT, $t->getMessage());
     closelog();
     
     // Return error response code/message to HTTP request.
@@ -18,7 +18,7 @@ try {
     http_response_code(500);
     $responseContent = json_encode([
         'name' => 'Internal Server Error',
-        'message' => $e->getMessage(),
+        'message' => $t->getMessage(),
         'status' => 500,
     ], JSON_PRETTY_PRINT);
     exit($responseContent);
