@@ -20,7 +20,7 @@ runny /data/yii migrate --interactive=0
 # Dump env to a file
 touch /etc/cron.d/email
 env | while read line ; do
-   echo "$line" >> /etc/cron.d/email
+  echo "$line" >> /etc/cron.d/email
 done
 
 # Add env vars to idp-cron to make available to scripts
