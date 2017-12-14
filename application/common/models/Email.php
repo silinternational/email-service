@@ -112,6 +112,8 @@ class Email extends EmailBase
                 'subject' => $this->subject,
                 'attempts_count' => $this->attempts_count,
                 'last_attempt' => $this->updated_at,
+                'error' => $e->getMessage(),
+                'code' => $e->getCode()
             ];
             \Yii::error($log);
 
