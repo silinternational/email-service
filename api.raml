@@ -35,9 +35,11 @@ types:
     html_body:
       requiredIfNot: [text_body]
     attempts_count: integer
-    updated_at: integer
+    updated_at:
+      type: integer
       description: UTC epoch
-    created_at: integer
+    created_at:
+      type: integer
       description: UTC epoch
     error:
 
@@ -69,7 +71,7 @@ types:
         {
           "to_address": "to@example.org",
           "subject": "HTML and text",
-          "text_body": "Email content"
+          "text_body": "Email content",
           "html_body": "<p>Email content</p>"
         }
     responses:
@@ -77,7 +79,8 @@ types:
         body: NewEmailCreated
       401:
         description: The request was either missing the Authorization header or used an invalid token
-        body: Error
+        body:
+          type: Error
           example: |
             {
               "name": "Unauthorized",
@@ -87,7 +90,8 @@ types:
             }
       422:
         description: The request data does not satisfy some validation rule.
-        body: Error
+        body:
+          type: Error
           example: |
             {
               "name": "Unprocessable entity",
@@ -97,7 +101,8 @@ types:
             }
       500:
         description: A server-side error occurred.
-        body: Error
+        body:
+          type: Error
           example: |
             {
               "name": "Internal Server Error",
