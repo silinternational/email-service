@@ -36,6 +36,13 @@ class EmailController extends Controller
             throw new UnprocessableEntityHttpException(current($email->getFirstErrors()));
         }
 
+        Yii::info([
+           'action' => 'email/queue',
+           'status' => 'queued',
+           'id' => $email->id,
+           'toAddress' => $email->to_address ?? '(null)',
+           'subject' => $email->subject ?? '(null)',
+        ], 'application');
         return $email;
     }
 }

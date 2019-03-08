@@ -62,6 +62,7 @@ class Email extends EmailBase
     {
         $log = [
             'action' => 'send email',
+            'id' => $this->id,
             'to' => $this->to_address,
             'subject' => $this->subject,
         ];
@@ -129,7 +130,11 @@ class Email extends EmailBase
                     1500649788
                 );
             }
+
+            return 0;
         }
+
+        return 1;
     }
 
     /**
@@ -194,8 +199,7 @@ class Email extends EmailBase
 
             /** @var Email $email */
             foreach ($queued as $email) {
-                $email->retry();
-                $log['sentEmails']++;
+                $log['sentEmails'] += $email->retry();
             }
         } catch (\Exception $e) {
             $log += [
