@@ -43,6 +43,16 @@ class EmailController extends Controller
            'toAddress' => $email->to_address ?? '(null)',
            'subject' => $email->subject ?? '(null)',
         ], 'application');
+
+        /*
+         * Attempt to send email immediately
+         */
+        try {
+            $email->send();
+        } catch (\Exception $e) {
+            // ignore for now, message is already queued
+        }
+        
         return $email;
     }
 }
