@@ -24,6 +24,16 @@ class EmailController extends Controller
         $email = new Email();
         $email->attributes = Yii::$app->request->getBodyParams();
 
+        /*
+         * Attempt to send email immediately
+         */
+        try {
+            $email->send();
+            return $email;
+        } catch (\Exception $e) {
+            // ignore for now, will queue
+        }
+
         if (! $email->save()) {
             $details = current($email->getFirstErrors());
 
@@ -44,15 +54,6 @@ class EmailController extends Controller
            'subject' => $email->subject ?? '(null)',
         ], 'application');
 
-        /*
-         * Attempt to send email immediately
-         */
-        try {
-            $email->send();
-        } catch (\Exception $e) {
-            // ignore for now, message is already queued
-        }
-        
         return $email;
     }
 }
