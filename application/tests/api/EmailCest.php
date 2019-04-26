@@ -26,9 +26,9 @@ class EmailCest
         $I->seeResponseCodeIs(200);
     }
 
-    public function testQueue_AllowedFields(ApiTester $I)
+    public function testQueue_AllowedFields_DelaySeconds(ApiTester $I)
     {
-        $I->wantTo('queue an email with allowed fields');
+        $I->wantTo('queue an email with allowed fields, delay_seconds');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
             'to_address' => 'test@example.org',
@@ -37,6 +37,23 @@ class EmailCest
             'subject' => 'subject allowed fields',
             'text_body' => 'text body',
             'html_body' => 'html body',
+            'delay_seconds' => 10,
+        ]);
+        $I->seeResponseCodeIs(200);
+    }
+
+    public function testQueue_AllowedFields_SendAfter(ApiTester $I)
+    {
+        $I->wantTo('queue an email with allowed fields, send_after');
+        $I->haveHttpHeader('Authorization', 'Bearer abc123');
+        $I->sendPOST('/email', [
+            'to_address' => 'test@example.org',
+            'cc_address' => 'testcc@example.org',
+            'bcc_address' => 'testbcc@example.org',
+            'subject' => 'subject allowed fields',
+            'text_body' => 'text body',
+            'html_body' => 'html body',
+            'send_after' => 1556314645,
         ]);
         $I->seeResponseCodeIs(200);
     }
@@ -57,6 +74,7 @@ class EmailCest
             'created_at' => 11111111,
             'updated_at' => 22222222,
             'error' => 'error message',
+            'send_after' => 1556314645,
         ]);
         $I->seeResponseCodeIs(200);
         $I->dontSeeResponseContains('123');

@@ -28,6 +28,9 @@ class EmailController extends Controller
          * Attempt to send email immediately
          */
         try {
+            if (! $email->validate()) {
+                throw new UnprocessableEntityHttpException(current($email->getFirstErrors()));
+            }
             if ($email->send()) {
                 return $email;
             }
