@@ -23,6 +23,14 @@ types:
       requiredIfNot: [html_body]
     html_body:
       requiredIfNot: [text_body]
+    send_after?:
+      type: integer
+      description: send the message after this time (Unix epoch, UTC)
+      collidesWith: [delay_seconds]
+    delay_seconds?:
+      type: integer
+      description: number of seconds to delay sending
+      collidesWith: [send_after]
 
   NewEmailCreated:
     id: integer
@@ -42,6 +50,9 @@ types:
       type: integer
       description: UTC epoch
     error:
+    send_after:
+      type: integer
+      description: message will be sent after this time (Unix epoch, UTC)
 
   Error:
     name:
@@ -66,6 +77,7 @@ types:
           "to_address": "to@example.org",
           "subject": "HTML only",
           "html_body": "<p>Email content</p>"
+          "send_after": 1556312556
         }
       example: |
         {
@@ -73,6 +85,7 @@ types:
           "subject": "HTML and text",
           "text_body": "Email content",
           "html_body": "<p>Email content</p>"
+          "delay_seconds": 3600
         }
     responses:
       200:

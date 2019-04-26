@@ -8,6 +8,9 @@ use yii\web\ServerErrorHttpException;
 
 class Email extends EmailBase
 {
+    /** int $delay number of seconds to delay sending */
+    public $delay_seconds = 0;
+
     public function scenarios()
     {
         $scenarios = [
@@ -18,6 +21,8 @@ class Email extends EmailBase
                 'subject',
                 'text_body',
                 'html_body',
+                'delay_seconds',
+                'send_after',
             ],
         ];
 
@@ -55,10 +60,10 @@ class Email extends EmailBase
     /**
      * Attempt to send email. Returns true on success or throws exception.
      * DOES NOT QUEUE ON FAILURE
-     * @return void
+     * @return bool
      * @throws \Exception
      */
-    public function send()
+    public function send(): bool
     {
         $log = [
             'action' => 'send email',
@@ -66,6 +71,12 @@ class Email extends EmailBase
             'to' => $this->to_address,
             'subject' => $this->subject,
         ];
+
+        if ((int)$this->send_after > time() || (int)$this->delay_seconds > 0) {
+            $log['status'] = 'delayed';
+            \Yii::info($log);
+            return false;
+        }
 
         /*
          * Try to send email or throw exception
@@ -90,6 +101,8 @@ class Email extends EmailBase
         } catch (\Exception $e) {
             throw $e;
         }
+
+        return true;
     }
 
     /**
@@ -259,8 +272,18 @@ class Email extends EmailBase
             'updated_at',
             'created_at',
             'error',
+            'send_after',
         ];
 
         return $fields;
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($this->delay_seconds > 0) {
+            $this->send_after = time() + $this->delay_seconds;
+        }
+
+        return parent::beforeSave($insert);
     }
 }

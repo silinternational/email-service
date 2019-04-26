@@ -28,8 +28,9 @@ class EmailController extends Controller
          * Attempt to send email immediately
          */
         try {
-            $email->send();
-            return $email;
+            if ($email->send()) {
+                return $email;
+            }
         } catch (\Exception $e) {
             // ignore for now, will queue
         }
@@ -47,11 +48,12 @@ class EmailController extends Controller
         }
 
         Yii::info([
-           'action' => 'email/queue',
-           'status' => 'queued',
-           'id' => $email->id,
-           'toAddress' => $email->to_address ?? '(null)',
-           'subject' => $email->subject ?? '(null)',
+            'action' => 'email/queue',
+            'status' => 'queued',
+            'id' => $email->id,
+            'toAddress' => $email->to_address ?? '(null)',
+            'subject' => $email->subject ?? '(null)',
+            'send_after' => $email->send_after,
         ], 'application');
 
         return $email;
