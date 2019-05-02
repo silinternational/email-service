@@ -60,10 +60,10 @@ class Email extends EmailBase
     /**
      * Attempt to send email. Returns true on success or throws exception.
      * DOES NOT QUEUE ON FAILURE
-     * @return bool
-     * @throws \Exception
+     * @throws \Exception if the send failed for any reason
+     * @throws EmailDelayedException if email is delayed by `send_after` or `delay_seconds`
      */
-    public function send(): bool
+    public function send()
     {
         $log = [
             'action' => 'send email',
@@ -75,34 +75,27 @@ class Email extends EmailBase
         if ((int)$this->send_after > time() || (int)$this->delay_seconds > 0) {
             $log['status'] = 'delayed';
             \Yii::info($log);
-            return false;
+            throw new EmailDelayedException();
         }
 
         /*
          * Try to send email or throw exception
          */
-        try {
-            $message = $this->getMessage();
-            if ( ! $message->send()) {
-                throw new \Exception('Unable to send email', 1461011826);
-            }
-
-            /*
-             * Remove entry from queue (if saved to queue) after successful send
-             */
-            $this->removeFromQueue();
-
-            /*
-             * Log success
-             */
-            $log['status'] = 'sent';
-            \Yii::info($log, 'application');
-
-        } catch (\Exception $e) {
-            throw $e;
+        $message = $this->getMessage();
+        if ( ! $message->send()) {
+            throw new \Exception('Unable to send email', 1461011826);
         }
 
-        return true;
+        /*
+         * Remove entry from queue (if saved to queue) after successful send
+         */
+        $this->removeFromQueue();
+
+        /*
+         * Log success
+         */
+        $log['status'] = 'sent';
+        \Yii::info($log, 'application');
     }
 
     /**

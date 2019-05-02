@@ -31,9 +31,8 @@ class EmailController extends Controller
             if (! $email->validate()) {
                 throw new UnprocessableEntityHttpException(current($email->getFirstErrors()));
             }
-            if ($email->send()) {
-                return $email;
-            }
+            $email->send();
+            return $email;
         } catch (\Exception $e) {
             // ignore for now, will queue
         }
