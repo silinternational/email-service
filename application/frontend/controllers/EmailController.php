@@ -28,6 +28,9 @@ class EmailController extends Controller
          * Attempt to send email immediately
          */
         try {
+            if (! $email->validate()) {
+                throw new UnprocessableEntityHttpException(current($email->getFirstErrors()));
+            }
             $email->send();
             return $email;
         } catch (\Exception $e) {
@@ -47,11 +50,12 @@ class EmailController extends Controller
         }
 
         Yii::info([
-           'action' => 'email/queue',
-           'status' => 'queued',
-           'id' => $email->id,
-           'toAddress' => $email->to_address ?? '(null)',
-           'subject' => $email->subject ?? '(null)',
+            'action' => 'email/queue',
+            'status' => 'queued',
+            'id' => $email->id,
+            'toAddress' => $email->to_address ?? '(null)',
+            'subject' => $email->subject ?? '(null)',
+            'send_after' => date('c', $email->send_after),
         ], 'application');
 
         return $email;

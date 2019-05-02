@@ -18,6 +18,7 @@ use Yii;
  * @property integer $updated_at
  * @property integer $created_at
  * @property string $error
+ * @property integer $send_after
  */
 class EmailBase extends \yii\db\ActiveRecord
 {
@@ -37,7 +38,7 @@ class EmailBase extends \yii\db\ActiveRecord
         return [
             [['to_address', 'subject', 'created_at'], 'required'],
             [['text_body', 'html_body'], 'string'],
-            [['attempts_count', 'updated_at', 'created_at'], 'integer'],
+            [['attempts_count', 'updated_at', 'created_at', 'send_after'], 'integer'],
             [['to_address', 'cc_address', 'bcc_address', 'subject', 'error'], 'string', 'max' => 255],
         ];
     }
@@ -59,6 +60,7 @@ class EmailBase extends \yii\db\ActiveRecord
             'updated_at' => Yii::t('app', 'Updated At'),
             'created_at' => Yii::t('app', 'Created At'),
             'error' => Yii::t('app', 'Error'),
+            'send_after' => Yii::t('app', 'Send After'),
         ];
     }
 }
