@@ -56,7 +56,7 @@ class EmailController extends Controller
             'id' => $email->id,
             'toAddress' => $email->to_address ?? '(null)',
             'subject' => $email->subject ?? '(null)',
-            'send_after' => $email->send_after,
+            'send_after' => date('c', $email->send_after),
         ], 'application');
 
         return $email;
