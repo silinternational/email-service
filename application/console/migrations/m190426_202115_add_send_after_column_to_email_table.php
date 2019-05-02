@@ -20,6 +20,6 @@ class m190426_202115_add_send_after_column_to_email_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{email}}', 'updated_at');
+        $this->dropColumn('{{email}}', 'send_after');
     }
 }
