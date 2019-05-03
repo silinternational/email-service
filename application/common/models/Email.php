@@ -8,6 +8,9 @@ use yii\web\ServerErrorHttpException;
 
 class Email extends EmailBase
 {
+    /** int $delay number of seconds to delay sending */
+    public $delay_seconds = 0;
+
     public function scenarios()
     {
         $scenarios = [
@@ -18,6 +21,8 @@ class Email extends EmailBase
                 'subject',
                 'text_body',
                 'html_body',
+                'delay_seconds',
+                'send_after',
             ],
         ];
 
@@ -55,8 +60,8 @@ class Email extends EmailBase
     /**
      * Attempt to send email. Returns true on success or throws exception.
      * DOES NOT QUEUE ON FAILURE
-     * @return void
-     * @throws \Exception
+     * @throws \Exception if the send failed for any reason
+     * @throws EmailDelayedException if email is delayed by `send_after` or `delay_seconds`
      */
     public function send()
     {
@@ -67,29 +72,30 @@ class Email extends EmailBase
             'subject' => $this->subject,
         ];
 
+        if ((int)$this->send_after > time() || (int)$this->delay_seconds > 0) {
+            $log['status'] = 'delayed';
+            \Yii::info($log);
+            throw new EmailDelayedException();
+        }
+
         /*
          * Try to send email or throw exception
          */
-        try {
-            $message = $this->getMessage();
-            if ( ! $message->send()) {
-                throw new \Exception('Unable to send email', 1461011826);
-            }
-
-            /*
-             * Remove entry from queue (if saved to queue) after successful send
-             */
-            $this->removeFromQueue();
-
-            /*
-             * Log success
-             */
-            $log['status'] = 'sent';
-            \Yii::info($log, 'application');
-
-        } catch (\Exception $e) {
-            throw $e;
+        $message = $this->getMessage();
+        if ( ! $message->send()) {
+            throw new \Exception('Unable to send email', 1461011826);
         }
+
+        /*
+         * Remove entry from queue (if saved to queue) after successful send
+         */
+        $this->removeFromQueue();
+
+        /*
+         * Log success
+         */
+        $log['status'] = 'sent';
+        \Yii::info($log, 'application');
     }
 
     /**
@@ -259,8 +265,18 @@ class Email extends EmailBase
             'updated_at',
             'created_at',
             'error',
+            'send_after',
         ];
 
         return $fields;
+    }
+
+    public function beforeSave($insert)
+    {
+        if ($this->delay_seconds > 0) {
+            $this->send_after = time() + $this->delay_seconds;
+        }
+
+        return parent::beforeSave($insert);
     }
 }

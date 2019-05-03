@@ -20,6 +20,7 @@ class EmailTest extends Test
     private $stubSubject;
     private $stubTextBody = 'email content as text';
     private $stubHtmlBody = '<p>email content as html</p>';
+    private $stubSendAfter = 1556312556;
 
     protected function _before()
     {
@@ -51,6 +52,7 @@ class EmailTest extends Test
         $this->assertNotNull($email->updated_at);
         $this->assertNotNull($email->created_at);
         $this->assertNull($email->error);
+        $this->assertNull($email->send_after);
     }
 
     public function testCreateMassAssignment_MinimumFields_HtmlBody()
@@ -76,6 +78,7 @@ class EmailTest extends Test
         $this->assertNotNull($email->updated_at);
         $this->assertNotNull($email->created_at);
         $this->assertNull($email->error);
+        $this->assertNull($email->send_after);
     }
 
     public function testCreateMassAssignment_AllowedFields()
@@ -89,6 +92,7 @@ class EmailTest extends Test
             'subject' => $this->stubSubject,
             'text_body' => $this->stubTextBody,
             'html_body' => $this->stubHtmlBody,
+            'send_after' => $this->stubSendAfter,
         ];
 
         $this->assertTrue($email->save(), current($email->getFirstErrors()));
@@ -104,6 +108,7 @@ class EmailTest extends Test
         $this->assertNotNull($email->updated_at);
         $this->assertNotNull($email->created_at);
         $this->assertNull($email->error);
+        $this->assertEquals($this->stubSendAfter, $email->send_after);
     }
 
     public function testCreateMassAssignment_AllFields()
@@ -127,6 +132,7 @@ class EmailTest extends Test
             'updated_at' => $stubUpdateAt,
             'created_at' => $stubCreatedAt,
             'error' => $stubErrorMessage,
+            'send_after' => $this->stubSendAfter,
         ];
 
         $this->assertTrue($email->save(), current($email->getFirstErrors()));
@@ -142,6 +148,7 @@ class EmailTest extends Test
         $this->assertNotEquals($stubUpdateAt, $email->updated_at);
         $this->assertNotEquals($stubCreatedAt, $email->created_at);
         $this->assertNotEquals($stubErrorMessage, $email->error);
+        $this->assertEquals($this->stubSendAfter, $email->send_after);
     }
 
     public function testSend()
@@ -254,5 +261,39 @@ class EmailTest extends Test
     private function countMailFiles()
     {
         return count($this->tester->grabSentEmails());
+    }
+
+    public function testSendDelayedEmail()
+    {
+        $initialEmailQueueCount = Email::find()->count();
+        $initialEmailSentCount = $this->countMailFiles();
+
+        // create 5 delayed emails
+        for ($i = 0; $i < 5; $i++) {
+            $email = new Email();
+
+            $email->attributes = [
+                'to_address' => $this->stubToAddress,
+                'cc_address' => $this->stubCcAddress,
+                'bcc_address' => $this->stubBccAddress,
+                'subject' => $this->stubSubject." $i",
+                'text_body' => $this->stubTextBody,
+                'html_body' => $this->stubHtmlBody,
+                'delay_seconds' => 5,
+            ];
+
+            $this->assertTrue($email->save(), current($email->getFirstErrors()));
+        }
+
+        Email::sendQueuedEmail();
+
+        $this->assertEquals($initialEmailQueueCount + 5, Email::find()->count());
+
+        sleep(5);
+
+        Email::sendQueuedEmail();
+
+        $this->assertEquals(0, Email::find()->count());
+        $this->assertEquals($initialEmailSentCount + 5, $this->countMailFiles());
     }
 }
