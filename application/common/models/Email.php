@@ -106,6 +106,8 @@ class Email extends EmailBase
     {
         try {
             $this->send();
+        } catch (EmailDelayedException $e) {
+            return 0;
         } catch (\Exception $e) {
             /*
              * Send failed, attempt to queue
