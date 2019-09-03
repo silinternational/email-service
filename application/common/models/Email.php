@@ -38,7 +38,9 @@ class Email extends EmailBase
                     'attempts_count', 'default', 'value' => 0,
                 ],
                 [
-                    ['to_address', 'cc_address', 'bcc_address'], 'email',
+                    ['to_address', 'cc_address', 'bcc_address'],
+                    'email',
+                    'message' => '{attribute} is not a valid email address: {value}',
                 ],
                 [
                     'text_body', 'required', 'when' => function ($model) {

@@ -6,7 +6,7 @@
     "fillup/fake-bower-assets": "2.0.9",
     "roave/security-advisories": "dev-master",
     "silinternational/php-env": "^2.0.1",
-    "yiisoft/yii2": "^2.0.11",
+    "yiisoft/yii2": "~2.0.25",
     "silinternational/psr3-adapters": "^1.1",
     "yiisoft/yii2-gii": "*",
     "silinternational/yii2-json-log-targets": "^1.0",

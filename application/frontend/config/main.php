@@ -44,6 +44,8 @@ return [
         ],
         // http://www.yiiframework.com/doc-2.0/guide-runtime-requests.html
         'request' => [
+            'enableCsrfCookie' => false,
+            
             // restrict input to JSON only http://www.yiiframework.com/doc-2.0/guide-rest-quick-start.html#enabling-json-input
             'parsers' => [
                 'application/json' => JsonParser::class,
