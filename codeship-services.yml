@@ -27,5 +27,4 @@ app:
         MAILER_USERNAME: test
         MAILER_PASSWORD: test
         NOTIFICATION_EMAIL: test@test.com
-        FROM_NAME: test
         FROM_EMAIL: test@test.com

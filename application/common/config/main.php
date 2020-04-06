@@ -3,6 +3,7 @@
 use Sil\Log\EmailTarget;
 use Sil\PhpEnv\Env;
 use yii\db\Connection;
+use yii\helpers\Json;
 use yii\swiftmailer\Mailer;
 
 $appName       = Env::requireEnv('APP_NAME');
@@ -19,6 +20,24 @@ $notificationEmail = Env::requireEnv('NOTIFICATION_EMAIL');
 $emailQueueBatchSize = Env::get('EMAIL_QUEUE_BATCH_SIZE', 10);
 $mailerUseFiles      = Env::get('MAILER_USEFILES', false);
 
+$logPrefix = function () {
+    $request = Yii::$app->request;
+    $prefixData = [
+        'env' => YII_ENV,
+    ];
+    if ($request instanceof \yii\web\Request) {
+        // Assumes format: Bearer consumer-module-name-32randomcharacters
+        $prefixData['id'] = substr($request->headers['Authorization'], 7, 16) ?: 'unknown';
+        $prefixData['ip'] = $request->getUserIP();
+        $prefixData['method'] = $request->getMethod();
+        $prefixData['url'] = $request->getUrl();
+    } elseif ($request instanceof \yii\console\Request) {
+        $prefixData['id'] = '(console)';
+    }
+
+    return Json::encode($prefixData);
+};
+
 
 return [
     'id' => 'app-common',
@@ -34,6 +53,21 @@ return [
         // http://www.yiiframework.com/doc-2.0/guide-runtime-logging.html
         'log' => [
             'targets' => [
+                [
+                    'class' => JsonStreamTarget::class,
+                    'url' => 'php://stdout',
+                    'levels' => ['info'],
+                    'logVars' => [],
+                    'categories' => ['application'],
+                    'prefix' => $logPrefix,
+                ],
+                [
+                    'class' => JsonStreamTarget::class,
+                    'url' => 'php://stderr',
+                    'levels' => ['error', 'warning'],
+                    'logVars' => [],
+                    'prefix' => $logPrefix,
+                ],
                 [
                     'class' => EmailTarget::class,
                     'categories' => ['application'], // stick to messages from this app, not all of Yii's built-in messaging.

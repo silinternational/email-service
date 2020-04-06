@@ -6,13 +6,7 @@ ENV REFRESHED_AT 2017-07-21
 RUN apt-get update -y && \
     apt-get install -y make
 
-COPY dockerbuild/vhost.conf /etc/apache2/sites-enabled/
-
 RUN mkdir -p /data
-
-# Copy in syslog config
-RUN rm -f /etc/rsyslog.d/*
-COPY dockerbuild/rsyslog.conf /etc/rsyslog.conf
 
 # Copy in cron configuration
 COPY dockerbuild/email-cron /etc/cron.d/
@@ -39,6 +33,11 @@ COPY application/ /data/
 # Fix folder permissions
 RUN chown -R www-data:www-data \
     console/runtime/
+
+COPY dockerbuild/vhost.conf /etc/apache2/sites-enabled/
+
+# ErrorLog inside a VirtualHost block is ineffective for unknown reasons
+RUN sed -i -E 's@ErrorLog .*@ErrorLog /proc/self/fd/2@i' /etc/apache2/apache2.conf
 
 EXPOSE 80
 ENTRYPOINT ["/usr/local/bin/s3-expand"]

@@ -7,22 +7,11 @@ try {
     $application = new yii\web\Application($config);
     $application->run();
 } catch (yii\web\HttpException $e) {
-    
-    // Log to syslog (Logentries).
-    openlog('email-service', LOG_NDELAY | LOG_PERROR, LOG_USER);
-    syslog(LOG_CRIT, $e->getMessage());
-    closelog();
-    
+    fwrite(fopen('php://stderr', 'w'), $e->getMessage() . PHP_EOL);
     // Let the error bubble on up.
     throw $e;
     
 } catch (\Throwable $t) {
-    
-    // Log to syslog (Logentries).
-    openlog('email-service', LOG_NDELAY | LOG_PERROR, LOG_USER);
-    syslog(LOG_CRIT, $t->getMessage());
-    closelog();
-    
     // Return error response code/message to HTTP request.
     header('Content-Type: application/json');
     http_response_code(500);
@@ -30,6 +19,7 @@ try {
         'name' => 'Internal Server Error',
         'message' => $t->getMessage(),
         'status' => 500,
-    ], JSON_PRETTY_PRINT);
+    ]);
+    fwrite(fopen('php://stderr', 'w'), $responseContent . PHP_EOL);
     exit($responseContent);
 }
