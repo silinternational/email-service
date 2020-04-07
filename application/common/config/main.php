@@ -1,5 +1,6 @@
 <?php
 
+use Sil\JsonLog\target\JsonStreamTarget;
 use Sil\Log\EmailTarget;
 use Sil\PhpEnv\Env;
 use yii\db\Connection;
