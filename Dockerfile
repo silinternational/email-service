@@ -1,7 +1,7 @@
 FROM silintl/php7:latest
 MAINTAINER Phillip Shipley <phillip_shipley@sil.org>
 
-ENV REFRESHED_AT 2017-07-21
+ENV REFRESHED_AT 2020-04-07
 
 RUN apt-get update -y && \
     apt-get install -y make
