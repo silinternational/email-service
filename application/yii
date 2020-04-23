@@ -29,10 +29,6 @@ try {
     exit($exitCode);
 } catch (\Throwable $t) {
     fwrite(STDERR, $t->getMessage() . PHP_EOL);
-    
-    openlog('email-service', LOG_NDELAY | LOG_PERROR, LOG_USER);
-    syslog(LOG_CRIT, $t->getMessage());
-    closelog();
-    
+
     exit(1);
 }

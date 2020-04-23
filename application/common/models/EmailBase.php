@@ -7,23 +7,23 @@ use Yii;
 /**
  * This is the model class for table "email".
  *
- * @property integer $id
+ * @property int $id
  * @property string $to_address
  * @property string $cc_address
  * @property string $bcc_address
  * @property string $subject
  * @property string $text_body
  * @property string $html_body
- * @property integer $attempts_count
- * @property integer $updated_at
- * @property integer $created_at
+ * @property int $attempts_count
+ * @property int $updated_at
+ * @property int $created_at
  * @property string $error
- * @property integer $send_after
+ * @property int $send_after
  */
 class EmailBase extends \yii\db\ActiveRecord
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function tableName()
     {
@@ -31,7 +31,7 @@ class EmailBase extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function rules()
     {
@@ -44,7 +44,7 @@ class EmailBase extends \yii\db\ActiveRecord
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function attributeLabels()
     {

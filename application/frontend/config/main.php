@@ -1,9 +1,7 @@
 <?php
 
 use common\models\ApiConsumer;
-use Sil\JsonLog\target\JsonSyslogTarget;
 use Sil\PhpEnv\Env;
-use yii\helpers\Json;
 use yii\web\JsonParser;
 use yii\web\Response;
 
@@ -13,30 +11,6 @@ return [
     // http://www.yiiframework.com/doc-2.0/guide-structure-applications.html#controllerNamespace
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
-        'log' => [
-            'targets' => [
-                [
-                    'class' => JsonSyslogTarget::class,
-                    'categories' => ['application'], // stick to messages from this app, not all of Yii's built-in messaging.
-                    'logVars' => [], // no need for default stuff: http://www.yiiframework.com/doc-2.0/yii-log-target.html#$logVars-detail
-                    'prefix' => function () {
-                        /* @var Request */
-                        $request = Yii::$app->request;
-
-                        // Assumes format: Bearer consumer-module-name-32randomcharacters
-                        $requesterId = substr($request->headers['Authorization'], 7, 16) ?: 'unknown';
-
-                        $prefixData = [
-                            'env' => YII_ENV,
-                            'id' => $requesterId,
-                            'ip' => $request->getUserIP(),
-                        ];
-
-                        return Json::encode($prefixData);
-                    },
-                ],
-            ]
-        ],
         // http://www.yiiframework.com/doc-2.0/guide-security-authentication.html
         'user' => [
             'identityClass' => ApiConsumer::class, // custom Bearer <token> implementation
