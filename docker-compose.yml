@@ -21,6 +21,8 @@ services:
         depends_on:
             - db
         environment:
+            APP_NAME: email-service
+            API_ACCESS_KEYS: abc123
             MYSQL_HOST: db
             MYSQL_DATABASE: email
             MYSQL_USER: email
