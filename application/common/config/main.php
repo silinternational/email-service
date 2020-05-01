@@ -1,11 +1,11 @@
 <?php
 
+use common\components\Mailer;
 use Sil\JsonLog\target\JsonStreamTarget;
 use Sil\Log\EmailTarget;
 use Sil\PhpEnv\Env;
 use yii\db\Connection;
 use yii\helpers\Json;
-use yii\swiftmailer\Mailer;
 
 $appName       = Env::requireEnv('APP_NAME');
 $fromEmail     = Env::requireEnv('FROM_EMAIL');
@@ -13,9 +13,6 @@ $mysqlHost     = Env::requireEnv('MYSQL_HOST');
 $mysqlDatabase = Env::requireEnv('MYSQL_DATABASE');
 $mysqlUser     = Env::requireEnv('MYSQL_USER');
 $mysqlPassword = Env::requireEnv('MYSQL_PASSWORD');
-$mailerHost        = Env::requireEnv('MAILER_HOST');
-$mailerUsername    = Env::requireEnv('MAILER_USERNAME');
-$mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
 $notificationEmail = Env::requireEnv('NOTIFICATION_EMAIL');
 
 $emailQueueBatchSize = Env::get('EMAIL_QUEUE_BATCH_SIZE', 10);
@@ -77,7 +74,7 @@ return [
                     'logVars' => [], // no need for default stuff: http://www.yiiframework.com/doc-2.0/yii-log-target.html#$logVars-detail
                     'levels' => ['error'],
                     'message' => [
-                        'from' => $mailerUsername,
+                        'from' => $fromEmail,
                         'to' => $notificationEmail,
                         'subject' => "ERROR - $appName [".YII_ENV."] Error",
                     ],
@@ -90,14 +87,6 @@ return [
             'useFileTransport' => $mailerUseFiles,
             'htmlLayout' => '@common/mail/layouts/html',
             'textLayout' => '@common/mail/layouts/text',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => $mailerHost,
-                'username' => $mailerUsername,
-                'password' => $mailerPassword,
-                'port' => '465',
-                'encryption' => 'ssl',
-            ],
         ],
     ],
     'params' => [
