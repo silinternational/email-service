@@ -2,9 +2,7 @@
 
 namespace common\components;
 
-use Aws\Exception\CredentialsException;
 use Aws\Ses\SesClient;
-use Aws\Exception\AwsException;
 use yii\mail\BaseMailer;
 
 class Mailer extends BaseMailer
@@ -16,7 +14,6 @@ class Mailer extends BaseMailer
 
     /** @var SesClient */
     public $client;
-
 
     public function init()
     {
