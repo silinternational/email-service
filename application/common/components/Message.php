@@ -148,7 +148,7 @@ class Message extends BaseMessage
     public function getHtmlBody()
     {
         if (empty($this->_htmlBody)) {
-            return $this->_textBody;
+            return htmlspecialchars($this->_textBody);
         }
         return $this->_htmlBody;
     }
