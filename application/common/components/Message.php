@@ -160,21 +160,25 @@ class Message extends BaseMessage
 
     public function attach($fileName, array $options = [])
     {
+        throw new \Exception('attach is not implemented');
         // TODO: Implement attach() method.
     }
 
     public function attachContent($content, array $options = [])
     {
+        throw new \Exception('attacheContent is not implemented');
         // TODO: Implement attachContent() method.
     }
 
     public function embed($fileName, array $options = [])
     {
+        throw new \Exception('embed is not implemented');
         // TODO: Implement embed() method.
     }
 
     public function embedContent($content, array $options = [])
     {
+        throw new \Exception('embedContent is not implemented');
         // TODO: Implement embedContent() method.
     }
 
