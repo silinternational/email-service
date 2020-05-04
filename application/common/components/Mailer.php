@@ -41,7 +41,7 @@ class Mailer extends BaseMailer
                     'Body' => [
                         'Html' => [
                             'Charset' => $message->getCharset(),
-                            'Data' => $message->get_HtmlBody(),
+                            'Data' => $message->getHtmlBody(),
                         ],
                         'Text' => [
                             'Charset' => $message->getCharset(),

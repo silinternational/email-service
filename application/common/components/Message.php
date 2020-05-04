@@ -190,7 +190,7 @@ class Message extends BaseMessage
     /**
      * @return string
      */
-    public function get_HtmlBody()
+    public function getHtmlBody()
     {
         if (empty($this->_htmlBody)) {
             return $this->_textBody;
