@@ -97,7 +97,7 @@ class Message extends BaseMessage
      */
     public function getReplyTo()
     {
-        return $this->_replyTo ?? [$this->_from];
+        return $this->_replyTo ?? [$this->getFrom()];
     }
 
     /**
