@@ -61,6 +61,7 @@ return [
                     'logVars' => [],
                     'categories' => ['application'],
                     'prefix' => $logPrefix,
+                    'exportInterval' => 1,
                 ],
                 [
                     'class' => JsonStreamTarget::class,
@@ -68,6 +69,7 @@ return [
                     'levels' => ['error', 'warning'],
                     'logVars' => [],
                     'prefix' => $logPrefix,
+                    'exportInterval' => 1,
                 ],
                 [
                     'class' => EmailTarget::class,
@@ -79,6 +81,7 @@ return [
                         'to' => $notificationEmail,
                         'subject' => "ERROR - $appName [".YII_ENV."] Error",
                     ],
+                    'exportInterval' => 1,
                 ],
             ],
         ],
