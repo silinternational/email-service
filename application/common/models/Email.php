@@ -60,12 +60,12 @@ class Email extends EmailBase
     }
 
     /**
-     * Attempt to send email. Returns true on success or throws exception.
+     * Attempt to send email. Returns 1 on success or 0 if delayed.
      * DOES NOT QUEUE ON FAILURE
      * @throws \Exception if the send failed for any reason
-     * @throws EmailDelayedException if email is delayed by `send_after` or `delay_seconds`
+     * @return int number of sent messages
      */
-    public function send()
+    public function send() : int
     {
         $log = [
             'action' => 'send email',
@@ -77,7 +77,7 @@ class Email extends EmailBase
         if ((int)$this->send_after > time() || (int)$this->delay_seconds > 0) {
             $log['status'] = 'delayed';
             \Yii::info($log);
-            throw new EmailDelayedException();
+            return 0;
         }
 
         /*
@@ -98,18 +98,19 @@ class Email extends EmailBase
          */
         $log['status'] = 'sent';
         \Yii::info($log, 'application');
+        return 1;
     }
 
     /**
-     * Attempt to send email and on failure update attempts count and save (queue it)
+     * Attempt to send email and on failure update attempts count and save (queue it).  Returns 1 on success or 0
+     * if delayed.
      * @throws \Exception
+     * @return int number of sent messages
      */
-    public function retry()
+    public function retry() : int
     {
         try {
-            $this->send();
-        } catch (EmailDelayedException $e) {
-            return 0;
+            return $this->send();
         } catch (\Exception $e) {
             /*
              * Send failed, attempt to queue
@@ -140,11 +141,8 @@ class Email extends EmailBase
                     1500649788
                 );
             }
-
-            return 0;
         }
-
-        return 1;
+        return 0;
     }
 
     /**
