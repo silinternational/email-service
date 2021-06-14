@@ -7,7 +7,7 @@ deps:
 	docker-compose run --rm cli composer install
 
 depsupdate:
-	docker-compose run --rm cli composer update
+	docker-compose run --rm cli bash -c "composer update && composer show -Df json > versions.json"
 
 db:
 	docker-compose up -d db
