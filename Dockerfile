@@ -3,10 +3,12 @@ MAINTAINER Phillip Shipley <phillip_shipley@sil.org>
 
 ENV REFRESHED_AT 2020-06-14
 
-RUN apt-get update -y && \
-    apt-get install -y \
+RUN apt-get update -y \
+    && apt-get install -y \
         cron \
-        make
+        make \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /data
 
