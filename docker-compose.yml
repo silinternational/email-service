@@ -43,7 +43,7 @@ services:
             PMA_PASSWORD: email
 
     cli:
-        image: silintl/php7:7.2
+        build: ./
         volumes:
             - ${COMPOSER_CACHE_DIR}:/composer
         volumes_from:
