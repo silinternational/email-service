@@ -4,7 +4,9 @@ MAINTAINER Phillip Shipley <phillip_shipley@sil.org>
 ENV REFRESHED_AT 2020-04-07
 
 RUN apt-get update -y && \
-    apt-get install -y make
+    apt-get install -y \
+        cron \
+        make
 
 RUN mkdir -p /data
 
