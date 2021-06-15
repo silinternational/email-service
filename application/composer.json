@@ -1,11 +1,16 @@
 {
   "name": "silinternational/email-service",
   "minimum-stability": "stable",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
   "require": {
     "php": ">=7.0",
     "ext-json":"*",
     "fillup/fake-bower-assets": "2.0.9",
-    "roave/security-advisories": "dev-master",
     "silinternational/php-env": "^2.0.1",
     "yiisoft/yii2": "~2.0.25",
     "silinternational/psr3-adapters": "^1.1",
@@ -18,6 +23,7 @@
     "codeception/codeception": "^2.2.7",
     "codeception/specify": "0.*",
     "codeception/verify": "0.*",
+    "roave/security-advisories": "dev-master",
     "silinternational/yii2-codeception": "dev-master"
   },
   "config": {

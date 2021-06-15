@@ -1,0 +1,69 @@
+{
+    "installed": [
+        {
+            "name": "codeception/codeception",
+            "version": "2.5.6",
+            "description": "BDD-style testing framework"
+        },
+        {
+            "name": "codeception/specify",
+            "version": "0.4.6",
+            "description": "BDD code blocks for PHPUnit and Codeception"
+        },
+        {
+            "name": "codeception/verify",
+            "version": "0.4.0",
+            "description": "BDD assertion library for PHPUnit"
+        },
+        {
+            "name": "fillup/fake-bower-assets",
+            "version": "2.0.9",
+            "description": "Use Composer \"replace\" to fake out installing bower-asset dependencies that aren't really needed"
+        },
+        {
+            "name": "roave/security-advisories",
+            "version": "dev-master ba84189",
+            "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it"
+        },
+        {
+            "name": "silinternational/php-env",
+            "version": "2.1.1",
+            "description": "Simple PHP library for getting (or requiring) environment variables, designed to handle true, false, and null more intelligently. If desired, an environment variable's value can be split into an array automatically."
+        },
+        {
+            "name": "silinternational/psr3-adapters",
+            "version": "1.1.0",
+            "description": "Various PSR3-compatible logging adapters."
+        },
+        {
+            "name": "silinternational/yii2-codeception",
+            "version": "dev-master 3fc6968",
+            "description": "Patches to implement nice features of yii2-codeception since it was abandoned"
+        },
+        {
+            "name": "silinternational/yii2-email-log-target",
+            "version": "1.0.1",
+            "description": "Yii2 log target for sending data to email without trace information"
+        },
+        {
+            "name": "silinternational/yii2-json-log-targets",
+            "version": "1.1.0",
+            "description": "A collection of Yii2 log targets that format the log message as a JSON string."
+        },
+        {
+            "name": "yiisoft/yii2",
+            "version": "2.0.42.1",
+            "description": "Yii PHP Framework Version 2"
+        },
+        {
+            "name": "yiisoft/yii2-gii",
+            "version": "2.2.2",
+            "description": "The Gii extension for the Yii framework"
+        },
+        {
+            "name": "yiisoft/yii2-swiftmailer",
+            "version": "2.1.2",
+            "description": "The SwiftMailer integration for the Yii framework"
+        }
+    ]
+}
