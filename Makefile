@@ -35,4 +35,4 @@ cron: db
 
 clean:
 	docker-compose kill
-	docker system prune -f
+	docker-compase rm -f
