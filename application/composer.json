@@ -11,22 +11,30 @@
     "php": ">=7.0",
     "ext-json":"*",
     "fillup/fake-bower-assets": "2.0.9",
-    "silinternational/php-env": "^2.0.1",
+    "silinternational/php-env": "^2.0.1 || ^3.0",
     "yiisoft/yii2": "~2.0.25",
-    "silinternational/psr3-adapters": "^1.1",
+    "silinternational/psr3-adapters": "^1.1 || ^2.0 || ^3.0",
     "yiisoft/yii2-gii": "*",
     "silinternational/yii2-json-log-targets": "^1.1",
     "silinternational/yii2-email-log-target": "^1.0",
     "yiisoft/yii2-swiftmailer": "^2.0"
   },
   "require-dev": {
-    "codeception/codeception": "^2.2.7",
-    "codeception/specify": "0.*",
-    "codeception/verify": "0.*",
+    "codeception/codeception": ">=2.2.7",
+    "codeception/specify": "^2.0",
+    "codeception/verify": "^2.0",
+    "codeception/module-asserts":  "^3.0",
+    "codeception/module-yii2":  "^1.1.7",
     "roave/security-advisories": "dev-master",
-    "silinternational/yii2-codeception": "dev-master"
+    "silinternational/yii2-codeception": "dev-feature/PHP8",
+    "yiisoft/yii2-symfonymailer": "^2.0",
+    "codeception/module-rest": "^3.3",
+    "codeception/module-phpbrowser": "^3.0"
   },
   "config": {
-    "process-timeout": 1800
+    "process-timeout": 1800,
+    "allow-plugins": {
+      "yiisoft/yii2-composer": true
+    }
   }
 }

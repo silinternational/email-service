@@ -7,7 +7,7 @@ deps:
 	docker-compose run --rm cli composer install
 
 depsupdate:
-	docker-compose run --rm cli bash -c "composer update && composer show -Df json > versions.json"
+	docker-compose run --rm cli bash -c "git config --global --add safe.directory /data/vendor/silinternational/yii2-codeception && composer update && composer show -D > versions.json"
 
 db:
 	docker-compose up -d db
