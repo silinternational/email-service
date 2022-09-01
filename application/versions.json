@@ -9,7 +9,7 @@ fillup/fake-bower-assets               2.0.9                    Use Composer "re
 roave/security-advisories              dev-master 6d26039       Prevents installation of composer packages with known security vulnerabilities: no API, simply require it
 silinternational/php-env               3.1.0                    Simple PHP library for getting (or requiring) environment variables, designed to handle true, false, and ...
 silinternational/psr3-adapters         3.1.0                    Various PSR3-compatible logging adapters.
-silinternational/yii2-codeception      dev-feature/PHP8 136d8fd Patches to implement nice features of yii2-codeception since it was abandoned
+silinternational/yii2-codeception      dev-feature/PHP8 8686791 Patches to implement nice features of yii2-codeception since it was abandoned
 silinternational/yii2-email-log-target 1.0.1                    Yii2 log target for sending data to email without trace information
 silinternational/yii2-json-log-targets 1.1.0                    A collection of Yii2 log targets that format the log message as a JSON string.
 yiisoft/yii2                           2.0.46                   Yii PHP Framework Version 2

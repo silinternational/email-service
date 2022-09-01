@@ -5908,17 +5908,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silinternational/yii2-codeception.git",
-                "reference": "136d8fda98823ecaecb411eec5c50eae60ad7478"
+                "reference": "8686791c5b43fe823294e66391d6251c44c5732f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silinternational/yii2-codeception/zipball/136d8fda98823ecaecb411eec5c50eae60ad7478",
-                "reference": "136d8fda98823ecaecb411eec5c50eae60ad7478",
+                "url": "https://api.github.com/repos/silinternational/yii2-codeception/zipball/8686791c5b43fe823294e66391d6251c44c5732f",
+                "reference": "8686791c5b43fe823294e66391d6251c44c5732f",
                 "shasum": ""
             },
             "require": {
                 "codeception/codeception": ">=2.2",
-                "fillup/fake-bower-assets": "^2.0",
                 "php": ">=5.6.0",
                 "yiisoft/yii2": "^2.0.5"
             },
@@ -5944,7 +5943,7 @@
                 "issues": "https://github.com/silinternational/yii2-codeception/issues",
                 "source": "https://github.com/silinternational/yii2-codeception/tree/feature/PHP8"
             },
-            "time": "2022-09-01T13:49:36+00:00"
+            "time": "2022-09-01T20:37:16+00:00"
         },
         {
             "name": "softcreatr/jsonpath",
