@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1628c05b0cf01fea2ae557efec629ed",
+    "content-hash": "f1285de41385d150dc0c42938866f504",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -5904,16 +5904,16 @@
         },
         {
             "name": "silinternational/yii2-codeception",
-            "version": "dev-feature/PHP8",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/silinternational/yii2-codeception.git",
-                "reference": "8686791c5b43fe823294e66391d6251c44c5732f"
+                "reference": "e4ebcd982db723b23a03e85acda52381be886e84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silinternational/yii2-codeception/zipball/8686791c5b43fe823294e66391d6251c44c5732f",
-                "reference": "8686791c5b43fe823294e66391d6251c44c5732f",
+                "url": "https://api.github.com/repos/silinternational/yii2-codeception/zipball/e4ebcd982db723b23a03e85acda52381be886e84",
+                "reference": "e4ebcd982db723b23a03e85acda52381be886e84",
                 "shasum": ""
             },
             "require": {
@@ -5941,9 +5941,9 @@
             "description": "Patches to implement nice features of yii2-codeception since it was abandoned",
             "support": {
                 "issues": "https://github.com/silinternational/yii2-codeception/issues",
-                "source": "https://github.com/silinternational/yii2-codeception/tree/feature/PHP8"
+                "source": "https://github.com/silinternational/yii2-codeception/tree/1.1.0"
             },
-            "time": "2022-09-01T20:37:16+00:00"
+            "time": "2022-09-02T17:44:25+00:00"
         },
         {
             "name": "softcreatr/jsonpath",
@@ -7321,8 +7321,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "roave/security-advisories": 20,
-        "silinternational/yii2-codeception": 20
+        "roave/security-advisories": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

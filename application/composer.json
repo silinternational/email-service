@@ -26,7 +26,7 @@
     "codeception/module-asserts":  "^3.0",
     "codeception/module-yii2":  "^1.1.7",
     "roave/security-advisories": "dev-master",
-    "silinternational/yii2-codeception": "dev-feature/PHP8",
+    "silinternational/yii2-codeception": "^1.1.0",
     "yiisoft/yii2-symfonymailer": "^2.0",
     "codeception/module-rest": "^3.3",
     "codeception/module-phpbrowser": "^3.0"
