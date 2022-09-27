@@ -224,9 +224,9 @@ class EmailTest extends Test
         $sent = $this->tester->grabSentEmails();
         $asString = $sent[0]->toString();
 
-        $this->assertContains('text/plain', $asString);
-        $this->assertContains('text/html', $asString);
-        $this->assertContains('<!DOCTYPE html', $asString);
+        $this->assertStringContainsString('text/plain', $asString);
+        $this->assertStringContainsString('text/html', $asString);
+        $this->assertStringContainsString('<!DOCTYPE html', $asString);
     }
 
     public function testSendQueuedEmails()

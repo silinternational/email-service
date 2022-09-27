@@ -9,16 +9,16 @@ use Yii;
  *
  * @property int $id
  * @property string $to_address
- * @property string $cc_address
- * @property string $bcc_address
+ * @property string|null $cc_address
+ * @property string|null $bcc_address
  * @property string $subject
- * @property string $text_body
- * @property string $html_body
+ * @property string|null $text_body
+ * @property string|null $html_body
  * @property int $attempts_count
- * @property int $updated_at
+ * @property int|null $updated_at
  * @property int $created_at
- * @property string $error
- * @property int $send_after
+ * @property string|null $error
+ * @property int|null $send_after
  */
 class EmailBase extends \yii\db\ActiveRecord
 {
