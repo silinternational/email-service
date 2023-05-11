@@ -34,7 +34,7 @@ services:
         command: /data/run-cron.sh
 
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin:latest
+        image: phpmyadmin/phpmyadmin:5
         ports:
             - "8001:80"
         environment:
