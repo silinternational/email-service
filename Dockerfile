@@ -1,5 +1,4 @@
 FROM silintl/php8:8.1
-MAINTAINER Phillip Shipley <phillip_shipley@sil.org>
 
 ENV REFRESHED_AT 2020-06-14
 
