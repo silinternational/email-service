@@ -7,7 +7,7 @@ deps:
 	docker-compose run --rm cli composer install
 
 depsupdate:
-	docker-compose run --rm cli composer update
+	docker-compose run --rm cli bash -c "composer update && composer show -D > versions.txt"
 
 db:
 	docker-compose up -d db
@@ -26,7 +26,7 @@ testunit:
 	APP_ENV=test docker-compose run --rm app /data/run-tests.sh
 
 #TODO: tests api won't run unless the access keys are abc-123, need to change that so test will run out-of-box.
-# would be best to have an additional container for testing becasue I don't think the env vars are being honored on the command line the way we think they are.
+# would be best to have an additional container for testing because I don't think the env vars are being honored on the command line the way we think they are.
 testapi:
 	APP_ENV=test docker-compose run --rm app /data/run-tests-api.sh
 
@@ -35,4 +35,4 @@ cron: db
 
 clean:
 	docker-compose kill
-	docker system prune -f
+	docker-compose rm -f

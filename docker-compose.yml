@@ -6,7 +6,7 @@ services:
             - ./application:/data
 
     db:
-        image: silintl/mariadb:latest
+        image: mariadb:10
         ports:
             - "3306"
         env_file:
@@ -41,16 +41,16 @@ services:
         command: /data/run-cron.sh
 
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin:latest
+        image: phpmyadmin/phpmyadmin:5
         ports:
             - "8001:80"
         environment:
             PMA_HOST: db
-            PMA_USER: email
+            PMA_USER: email  # these should be the same as in your local.env
             PMA_PASSWORD: email
 
     cli:
-        image: silintl/php7:7.2
+        build: ./
         volumes:
             - ${COMPOSER_CACHE_DIR}:/composer
         volumes_from:

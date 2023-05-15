@@ -13,3 +13,4 @@ auth.json
 vendor/
 *.aes
 dockercfg
+application/frontend/runtime

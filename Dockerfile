@@ -1,10 +1,13 @@
-FROM silintl/php7:7.2
-MAINTAINER Phillip Shipley <phillip_shipley@sil.org>
+FROM silintl/php8:8.1
 
-ENV REFRESHED_AT 2020-04-30
+ENV REFRESHED_AT 2020-06-14
 
-RUN apt-get update -y && \
-    apt-get install -y make
+RUN apt-get update -y \
+    && apt-get install -y \
+        cron \
+        make \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /data
 
