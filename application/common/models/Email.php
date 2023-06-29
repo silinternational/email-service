@@ -163,7 +163,12 @@ class Email extends EmailBase
                 'text' => $this->text_body
             ]
         );
-        $mailer->setFrom(\Yii::$app->params['fromEmail']);
+        $from = \Yii::$app->params['fromEmail'];
+        $name = \Yii::$app->params['fromName'];
+        if (! empty($name)) {
+            $from = [$from => $name];
+        }
+        $mailer->setFrom($from);
         $mailer->setTo($this->to_address);
         $mailer->setSubject($this->subject);
 

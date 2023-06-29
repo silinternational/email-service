@@ -9,6 +9,7 @@ use yii\swiftmailer\Mailer;
 
 $appName       = Env::requireEnv('APP_NAME');
 $fromEmail     = Env::requireEnv('FROM_EMAIL');
+$fromName      = Env::get('FROM_NAME');
 $mysqlHost     = Env::requireEnv('MYSQL_HOST');
 $mysqlDatabase = Env::requireEnv('MYSQL_DATABASE');
 $mysqlUser     = Env::requireEnv('MYSQL_USER');
