@@ -103,6 +103,7 @@ return [
     ],
     'params' => [
         'fromEmail' => $fromEmail,
+        'fromName' => $fromName,
         'emailQueueBatchSize' => $emailQueueBatchSize,
     ],
 ];
