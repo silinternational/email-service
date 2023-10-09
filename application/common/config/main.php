@@ -92,6 +92,7 @@ $cfg = [
             'useFileTransport' => $mailerUseFiles,
             'htmlLayout' => '@common/mail/layouts/html',
             'textLayout' => '@common/mail/layouts/text',
+            'awsRegion' => Env::get('AWS_REGION')
         ],
     ],
     'params' => [

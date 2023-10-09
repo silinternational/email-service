@@ -15,12 +15,24 @@ class Mailer extends BaseMailer
     /** @var SesClient */
     public $client;
 
+    /**
+     * The AWS Region in use
+     * @var array
+     */
+    public $awsRegion;
+
     public function init()
     {
+        if (empty($this->awsRegion)) {
+            $this->awsRegion = 'us-east-1';
+        }
+
+        \Yii::info("mailer init " . $this->awsRegion);
+
         // the AWS SDK gets credentials from env vars AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
         $this->client = new SesClient([
             'version' => 'latest',
-            'region' => 'us-east-1',
+            'region' => $this->awsRegion,
         ]);
     }
 
