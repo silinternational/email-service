@@ -76,7 +76,8 @@ class Email extends EmailBase
 
         if ((int)$this->send_after > time() || (int)$this->delay_seconds > 0) {
             $log['status'] = 'delayed';
-            \Yii::info($log);            throw new EmailDelayedException();
+            \Yii::info($log);
+            throw new EmailDelayedException();
         }
 
         /*
@@ -97,7 +98,6 @@ class Email extends EmailBase
          */
         $log['status'] = 'sent';
         \Yii::info($log, 'application');
-        return 1;
     }
 
     /**
@@ -140,6 +140,7 @@ class Email extends EmailBase
                     1500649788
                 );
             }
+
             return 0;
         }
 
