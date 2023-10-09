@@ -171,8 +171,7 @@ class EmailTest extends Test
 
         $this->assertEquals($initialEmailQueueCount + 1, Email::find()->count(), 'emails in db did not increase by one after saving email');
 
-        $n = $email->send();
-        $this->assertEquals(1, $n, 'message not sent');
+        $email->send();
 
         $this->assertEquals($initialEmailSentCount + 1, $this->countMailFiles(), 'sent emails count did not increase by one after sending email');
         $this->assertEquals($initialEmailQueueCount, Email::find()->count(), 'emails in db did not decrease by one after sending email');
@@ -219,8 +218,7 @@ class EmailTest extends Test
 
         $this->assertTrue($email->save(), current($email->getFirstErrors()));
 
-        $n = $email->send();
-        $this->assertEquals(1, $n, 'message not sent');
+        $email->send();
 
         /** @var yii\mail\Message[] $sent */
         $sent = $this->tester->grabSentEmails();
