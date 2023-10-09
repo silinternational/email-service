@@ -15,9 +15,6 @@ $mysqlHost         = Env::requireEnv('MYSQL_HOST');
 $mysqlDatabase     = Env::requireEnv('MYSQL_DATABASE');
 $mysqlUser         = Env::requireEnv('MYSQL_USER');
 $mysqlPassword     = Env::requireEnv('MYSQL_PASSWORD');
-$mailerHost        = Env::requireEnv('MAILER_HOST');
-$mailerUsername    = Env::requireEnv('MAILER_USERNAME');
-$mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
 $notificationEmail = Env::requireEnv('NOTIFICATION_EMAIL');
 
 $emailQueueBatchSize = Env::get('EMAIL_QUEUE_BATCH_SIZE', 10);
@@ -102,7 +99,11 @@ $cfg = [
     ],
 ];
 
+$mailerHost = Env::get('MAILER_HOST');
 if (!empty($mailerHost)) {
+    $mailerUsername    = Env::requireEnv('MAILER_USERNAME');
+    $mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
+
     $cfg['components']['mailer']['class'] = SwiftMailer::class;
     $cfg['components']['mailer']['transport'] = [
         'class' => 'Swift_SmtpTransport',
