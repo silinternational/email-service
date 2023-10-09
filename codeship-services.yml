@@ -23,5 +23,8 @@ app:
         MYSQL_PASSWORD: email
         API_ACCESS_KEYS: abc123
         APP_NAME: email-service
+        MAILER_HOST: test
+        MAILER_USERNAME: test
+        MAILER_PASSWORD: test
         NOTIFICATION_EMAIL: test@test.com
         FROM_EMAIL: test@test.com
