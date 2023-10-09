@@ -53,8 +53,14 @@ class Message extends BaseMessage
 
     public function setFrom($from)
     {
-        if (is_array($from) && count($from) > 0) {
-            $this->_from = $from[0];
+        if (is_array($from)) {
+            if (isset($from[0])) {
+                $this->_from = $from[0];
+            } else {
+                $addresses = array_keys($from);
+                $names = array_values($from);
+                $this->_from = sprintf('%s <%s>', $names[0], $addresses[0]);
+            }
         } else {
             $this->_from = $from;
         }
