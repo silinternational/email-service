@@ -60,7 +60,7 @@ class Email extends EmailBase
     }
 
     /**
-     * Attempt to send email. Returns 1 on success or 0 if not sent.
+     * Attempt to send email. Returns 1 on success or 0 if not attempted (such as if it's not yet time to send it).
      * DOES NOT QUEUE ON FAILURE
      * @throws \Exception if sending failed
      * @return int number of sent messages
