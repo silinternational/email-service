@@ -89,7 +89,6 @@ $cfg = [
             'useFileTransport' => $mailerUseFiles,
             'htmlLayout' => '@common/mail/layouts/html',
             'textLayout' => '@common/mail/layouts/text',
-            'awsRegion' => Env::get('AWS_REGION')
         ],
     ],
     'params' => [
@@ -100,7 +99,9 @@ $cfg = [
 ];
 
 $mailerHost = Env::get('MAILER_HOST');
-if (!empty($mailerHost)) {
+if (empty($mailerHost)) {
+    $cfg['components']['awsRegion'] = Env::get('AWS_REGION');
+} else {
     $mailerUsername    = Env::requireEnv('MAILER_USERNAME');
     $mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
 
