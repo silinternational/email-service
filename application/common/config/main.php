@@ -1,6 +1,6 @@
 <?php
 
-use common\components\Mailer;
+use common\components\SesMailer;
 use Sil\JsonLog\target\JsonStreamTarget;
 use Sil\Log\EmailTarget;
 use Sil\PhpEnv\Env;
@@ -85,7 +85,7 @@ $cfg = [
             ],
         ],
         'mailer' => [
-            'class' => Mailer::class,
+            'class' => SesMailer::class,
             'useFileTransport' => $mailerUseFiles,
             'htmlLayout' => '@common/mail/layouts/html',
             'textLayout' => '@common/mail/layouts/text',

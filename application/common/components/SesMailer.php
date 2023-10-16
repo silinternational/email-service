@@ -5,12 +5,12 @@ namespace common\components;
 use Aws\Ses\SesClient;
 use yii\mail\BaseMailer;
 
-class Mailer extends BaseMailer
+class SesMailer extends BaseMailer
 {
     /**
      * @var string message default class name.
      */
-    public $messageClass = Message::class;
+    public $messageClass = SesMessage::class;
 
     /** @var SesClient */
     public $client;
@@ -37,7 +37,7 @@ class Mailer extends BaseMailer
     }
 
     /**
-     * @param Message $message
+     * @param SesMessage $message
      * @return bool
      */
     protected function sendMessage($message)
@@ -49,7 +49,7 @@ class Mailer extends BaseMailer
                 ],
                 'ReplyToAddresses' => $message->getReplyTo(),
                 'Source' => $message->getFrom(),
-                'Message' => [
+                'SesMessage' => [
                     'Body' => [
                         'Html' => [
                             'Charset' => $message->getCharset(),

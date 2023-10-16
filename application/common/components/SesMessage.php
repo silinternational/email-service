@@ -7,7 +7,7 @@ namespace common\components;
 use yii\mail\BaseMessage;
 use yii\mail\MessageInterface;
 
-class Message extends BaseMessage
+class SesMessage extends BaseMessage
 {
     /** @var string */
     private $_charset;
