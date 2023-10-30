@@ -100,7 +100,7 @@ $cfg = [
 
 $mailerHost = Env::get('MAILER_HOST');
 if (empty($mailerHost)) {
-    $cfg['components']['awsRegion'] = Env::get('AWS_REGION');
+    $cfg['components']['mailer']['awsRegion'] = Env::get('AWS_REGION');
 } else {
     $mailerUsername    = Env::requireEnv('MAILER_USERNAME');
     $mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
