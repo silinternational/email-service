@@ -49,7 +49,7 @@ class SesMailer extends BaseMailer
                 ],
                 'ReplyToAddresses' => $message->getReplyTo(),
                 'Source' => $message->getFrom(),
-                'SesMessage' => [
+                'Message' => [
                     'Body' => [
                         'Html' => [
                             'Charset' => $message->getCharset(),
