@@ -20,6 +20,12 @@ services:
             - "8888:80"
         depends_on:
             - db
+        environment:
+            APP_NAME: email-service
+            MYSQL_HOST: db
+            MYSQL_DATABASE: email
+            MYSQL_USER: email
+            MYSQL_PASSWORD: email
         env_file:
             - ./local.env
 

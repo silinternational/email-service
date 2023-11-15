@@ -1,22 +1,20 @@
 <?php
 
+use common\components\SesMailer;
 use Sil\JsonLog\target\JsonStreamTarget;
 use Sil\Log\EmailTarget;
 use Sil\PhpEnv\Env;
 use yii\db\Connection;
 use yii\helpers\Json;
-use yii\swiftmailer\Mailer;
+use yii\swiftmailer\Mailer as SwiftMailer;
 
-$appName       = Env::requireEnv('APP_NAME');
-$fromEmail     = Env::requireEnv('FROM_EMAIL');
-$fromName      = Env::get('FROM_NAME');
-$mysqlHost     = Env::requireEnv('MYSQL_HOST');
-$mysqlDatabase = Env::requireEnv('MYSQL_DATABASE');
-$mysqlUser     = Env::requireEnv('MYSQL_USER');
-$mysqlPassword = Env::requireEnv('MYSQL_PASSWORD');
-$mailerHost        = Env::requireEnv('MAILER_HOST');
-$mailerUsername    = Env::requireEnv('MAILER_USERNAME');
-$mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
+$appName           = Env::requireEnv('APP_NAME');
+$fromEmail         = Env::requireEnv('FROM_EMAIL');
+$fromName          = Env::get('FROM_NAME');
+$mysqlHost         = Env::requireEnv('MYSQL_HOST');
+$mysqlDatabase     = Env::requireEnv('MYSQL_DATABASE');
+$mysqlUser         = Env::requireEnv('MYSQL_USER');
+$mysqlPassword     = Env::requireEnv('MYSQL_PASSWORD');
 $notificationEmail = Env::requireEnv('NOTIFICATION_EMAIL');
 
 $emailQueueBatchSize = Env::get('EMAIL_QUEUE_BATCH_SIZE', 10);
@@ -41,7 +39,7 @@ $logPrefix = function () {
 };
 
 
-return [
+$cfg = [
     'id' => 'app-common',
     'bootstrap' => ['log'],
     'components' => [
@@ -78,7 +76,7 @@ return [
                     'logVars' => [], // no need for default stuff: http://www.yiiframework.com/doc-2.0/yii-log-target.html#$logVars-detail
                     'levels' => ['error'],
                     'message' => [
-                        'from' => $mailerUsername,
+                        'from' => $fromEmail,
                         'to' => $notificationEmail,
                         'subject' => "ERROR - $appName [".YII_ENV."] Error",
                     ],
@@ -87,18 +85,10 @@ return [
             ],
         ],
         'mailer' => [
-            'class' => Mailer::class,
+            'class' => SesMailer::class,
             'useFileTransport' => $mailerUseFiles,
             'htmlLayout' => '@common/mail/layouts/html',
             'textLayout' => '@common/mail/layouts/text',
-            'transport' => [
-                'class' => 'Swift_SmtpTransport',
-                'host' => $mailerHost,
-                'username' => $mailerUsername,
-                'password' => $mailerPassword,
-                'port' => '465',
-                'encryption' => 'ssl',
-            ],
         ],
     ],
     'params' => [
@@ -107,3 +97,23 @@ return [
         'emailQueueBatchSize' => $emailQueueBatchSize,
     ],
 ];
+
+$mailerHost = Env::get('MAILER_HOST');
+if (empty($mailerHost)) {
+    $cfg['components']['mailer']['awsRegion'] = Env::get('AWS_REGION');
+} else {
+    $mailerUsername    = Env::requireEnv('MAILER_USERNAME');
+    $mailerPassword    = Env::requireEnv('MAILER_PASSWORD');
+
+    $cfg['components']['mailer']['class'] = SwiftMailer::class;
+    $cfg['components']['mailer']['transport'] = [
+        'class' => 'Swift_SmtpTransport',
+        'host' => $mailerHost,
+        'username' => $mailerUsername,
+        'password' => $mailerPassword,
+        'port' => '465',
+        'encryption' => 'ssl',
+    ];
+}
+
+return $cfg;

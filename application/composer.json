@@ -10,6 +10,7 @@
   "require": {
     "php": ">=7.0",
     "ext-json":"*",
+    "aws/aws-sdk-php": "^3.136",
     "fillup/fake-bower-assets": "2.0.9",
     "silinternational/php-env": "^2.0.1 || ^3.0",
     "yiisoft/yii2": "~2.0.25",
