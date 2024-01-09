@@ -16,11 +16,11 @@ COPY dockerbuild/email-cron /etc/cron.d/
 RUN chmod 0644 /etc/cron.d/email-cron
 
 # get s3-expand
-RUN curl https://raw.githubusercontent.com/silinternational/s3-expand/1.5/s3-expand -o /usr/local/bin/s3-expand
+RUN curl https://raw.githubusercontent.com/silinternational/s3-expand/1.5/s3-expand -fo /usr/local/bin/s3-expand
 RUN chmod a+x /usr/local/bin/s3-expand
 
 # get runny
-RUN curl https://raw.githubusercontent.com/silinternational/runny/0.1/runny -o /usr/local/bin/runny
+RUN curl https://raw.githubusercontent.com/silinternational/runny/0.1/runny -fo /usr/local/bin/runny
 RUN chmod a+x /usr/local/bin/runny
 
 WORKDIR /data
