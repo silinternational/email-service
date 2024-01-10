@@ -10,7 +10,7 @@ try {
     fwrite(fopen('php://stderr', 'w'), $e->getMessage() . PHP_EOL);
     // Let the error bubble on up.
     throw $e;
-    
+
 } catch (\Throwable $t) {
     // Return error response code/message to HTTP request.
     header('Content-Type: application/json');

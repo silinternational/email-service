@@ -65,7 +65,7 @@ class Email extends EmailBase
      * @throws \Exception if sending failed
      * @return int number of sent messages
      */
-    public function send() : int
+    public function send(): int
     {
         $log = [
             'action' => 'send email',
@@ -84,7 +84,7 @@ class Email extends EmailBase
          * Try to send email or throw exception
          */
         $message = $this->getMessage();
-        if ( ! $message->send()) {
+        if (!$message->send()) {
             throw new \Exception('Unable to send email', 1461011826);
         }
 
@@ -106,7 +106,7 @@ class Email extends EmailBase
      * @throws \Exception
      * @return int number of sent messages
      */
-    public function retry() : int
+    public function retry(): int
     {
         try {
             return $this->send();
@@ -128,7 +128,7 @@ class Email extends EmailBase
             ];
             \Yii::error($log);
 
-            if ( ! $this->save()) {
+            if (!$this->save()) {
                 \Yii::error([
                     'action' => 'save email after failed retry failed',
                     'status' => 'error',
@@ -234,7 +234,7 @@ class Email extends EmailBase
     private function removeFromQueue()
     {
         try {
-            if ($this->id && ! $this->delete()) {
+            if ($this->id && !$this->delete()) {
                 throw new \Exception(
                     'Unable to delete email queue entry',
                     1461012183
