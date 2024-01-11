@@ -30,7 +30,8 @@
     "silinternational/yii2-codeception": "^1.1.0",
     "yiisoft/yii2-symfonymailer": "^2.0",
     "codeception/module-rest": "^3.3",
-    "codeception/module-phpbrowser": "^3.0"
+    "codeception/module-phpbrowser": "^3.0",
+    "friendsofphp/php-cs-fixer": "^3.39"
   },
   "config": {
     "process-timeout": 1800,

@@ -36,3 +36,6 @@ cron: db
 clean:
 	docker-compose kill
 	docker-compose rm -f
+
+psr2:
+	docker-compose run --rm cli bash -c "vendor/bin/php-cs-fixer fix ."
