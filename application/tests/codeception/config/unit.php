@@ -11,7 +11,7 @@ $unitTestConfig = [
     'id' => 'unit_tests_app',
     'basePath' => dirname(dirname(dirname(__DIR__))),
     'components' => [
-        'mailer' => ArrayHelper::merge($mainConfig['components']['mailer'],[
+        'mailer' => ArrayHelper::merge($mainConfig['components']['mailer'], [
             'useFileTransport' => true,
         ])
     ],

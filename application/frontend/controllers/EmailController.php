@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use Yii;
@@ -28,7 +29,7 @@ class EmailController extends Controller
          * Attempt to send email immediately
          */
         try {
-            if (! $email->validate()) {
+            if (!$email->validate()) {
                 throw new UnprocessableEntityHttpException(current($email->getFirstErrors()));
             }
             $email->send();
@@ -37,7 +38,7 @@ class EmailController extends Controller
             // ignore for now, will queue
         }
 
-        if (! $email->save()) {
+        if (!$email->save()) {
             $details = current($email->getFirstErrors());
 
             Yii::error([
