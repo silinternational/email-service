@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+
+# Exit script if any command fails
+set -e
+
+# Echo commands as they are executed
 set -x
 
 # Install composer dev dependencies

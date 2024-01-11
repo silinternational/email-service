@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# Exit script if any command fails
+set -e
+
+# Echo commands as they are executed
+set -x
+
 # Try to install composer dev dependencies
 cd /data
 composer install --no-interaction --no-scripts
