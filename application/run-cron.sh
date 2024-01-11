@@ -15,9 +15,10 @@ chown -R www-data:www-data \
 
 # Run database migrations
 /data/yii migrate --interactive=0
-$status = $?
-if [ $status -ne 0 ]; then
-    exit $status
+rc=$?;
+if [[ $rc != 0 ]]; then
+  echo "FAILED to run database migrations. Exit code ${rc}."
+  exit $rc
 fi
 
 # Dump env to a file to make available to cron
