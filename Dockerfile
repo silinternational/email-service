@@ -1,6 +1,6 @@
 FROM silintl/php8:8.1
 
-ENV REFRESHED_AT 2020-06-14
+ENV REFRESHED_AT 2023-01-11
 
 RUN apt-get update -y \
     && apt-get install -y \
@@ -14,14 +14,6 @@ RUN mkdir -p /data
 # Copy in cron configuration
 COPY dockerbuild/email-cron /etc/cron.d/
 RUN chmod 0644 /etc/cron.d/email-cron
-
-# get s3-expand
-RUN curl https://raw.githubusercontent.com/silinternational/s3-expand/1.5/s3-expand -fo /usr/local/bin/s3-expand
-RUN chmod a+x /usr/local/bin/s3-expand
-
-# get runny
-RUN curl https://raw.githubusercontent.com/silinternational/runny/0.1/runny -fo /usr/local/bin/runny
-RUN chmod a+x /usr/local/bin/runny
 
 WORKDIR /data
 
@@ -43,5 +35,5 @@ COPY dockerbuild/vhost.conf /etc/apache2/sites-enabled/
 RUN sed -i -E 's@ErrorLog .*@ErrorLog /proc/self/fd/2@i' /etc/apache2/apache2.conf
 
 EXPOSE 80
-ENTRYPOINT ["/usr/local/bin/s3-expand"]
+
 CMD ["/data/run.sh"]
