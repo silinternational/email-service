@@ -14,7 +14,12 @@ chown -R www-data:www-data \
   /data/console/runtime/
 
 # Run database migrations
-runny /data/yii migrate --interactive=0
+/data/yii migrate --interactive=0
+rc=$?;
+if [[ $rc != 0 ]]; then
+  echo "FAILED to run database migrations. Exit code ${rc}."
+  exit $rc
+fi
 
 # Dump env to a file to make available to cron
 env >> /etc/environment
