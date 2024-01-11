@@ -20,7 +20,7 @@ class NoGuy extends \Codeception\Actor
 {
     use _generated\NoGuyActions;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * Define custom actions here
+     */
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace common\components;
-
 
 use yii\mail\BaseMessage;
 use yii\mail\MessageInterface;

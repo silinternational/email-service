@@ -1,4 +1,5 @@
 <?php
+
 // This is global bootstrap for autoloading
 
 define('YII_ENV', 'test');

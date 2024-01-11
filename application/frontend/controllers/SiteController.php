@@ -1,4 +1,5 @@
 <?php
+
 namespace frontend\controllers;
 
 use Exception;
@@ -29,7 +30,8 @@ class SiteController extends Controller
         } catch (Exception $e) {
             \Yii::error($e->getMessage());
             throw new ServerErrorHttpException(
-                'Database connection problem.', $e->getCode()
+                'Database connection problem.',
+                $e->getCode()
             );
         }
 
