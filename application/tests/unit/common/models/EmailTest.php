@@ -291,7 +291,7 @@ class EmailTest extends Test
 
         $this->assertEquals($initialEmailQueueCount + 5, Email::find()->count());
 
-        sleep(5);
+        sleep(6);
 
         Email::sendQueuedEmail();
 
