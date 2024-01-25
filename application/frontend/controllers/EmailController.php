@@ -25,17 +25,20 @@ class EmailController extends Controller
         $email = new Email();
         $email->attributes = Yii::$app->request->getBodyParams();
 
-        /*
-         * Attempt to send email immediately
-         */
-        try {
-            if (!$email->validate()) {
-                throw new UnprocessableEntityHttpException(current($email->getFirstErrors()));
+        if (!$email->validate()) {
+            throw new UnprocessableEntityHttpException(current($email->getFirstErrors()));
+        }
+
+        if ((int)$email->send_after <= time() && (int)$email->delay_seconds <= 0) {
+            /*
+             * Attempt to send email immediately
+             */
+            try {
+                $email->send();
+                return $email;
+            } catch (\Exception $e) {
+                // ignore for now, will queue
             }
-            $email->send();
-            return $email;
-        } catch (\Exception $e) {
-            // ignore for now, will queue
         }
 
         if (!$email->save()) {
@@ -57,7 +60,7 @@ class EmailController extends Controller
             'toAddress' => $email->to_address ?? '(null)',
             'subject' => $email->subject ?? '(null)',
             'send_after' => date('c', $email->send_after),
-        ], 'application');
+        ]);
 
         return $email;
     }

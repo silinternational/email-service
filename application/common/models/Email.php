@@ -67,19 +67,6 @@ class Email extends EmailBase
      */
     public function send(): int
     {
-        $log = [
-            'action' => 'send email',
-            'id' => $this->id,
-            'to' => $this->to_address,
-            'subject' => $this->subject,
-        ];
-
-        if ((int)$this->send_after > time() || (int)$this->delay_seconds > 0) {
-            $log['status'] = 'delayed';
-            \Yii::info($log);
-            return 0;
-        }
-
         /*
          * Try to send email or throw exception
          */
@@ -96,8 +83,13 @@ class Email extends EmailBase
         /*
          * Log success
          */
-        $log['status'] = 'sent';
-        \Yii::info($log, 'application');
+        \Yii::info([
+            'action' => 'send email',
+            'id' => $this->id,
+            'to' => $this->to_address,
+            'subject' => $this->subject,
+            'status' => 'sent',
+        ]);
         return 1;
     }
 
@@ -197,7 +189,9 @@ class Email extends EmailBase
         ];
         try {
             $batchSize = \Yii::$app->params['emailQueueBatchSize'];
-            $queued = self::find()->orderBy(['updated_at' => SORT_ASC])->limit($batchSize)->all();
+            $queued = self::find()->orderBy(['updated_at' => SORT_ASC])
+                ->where(['<', 'send_after', time()])->orWhere('send_after IS NULL')
+                ->limit($batchSize)->all();
 
             $log += [
                 'batchSize' => $batchSize,
