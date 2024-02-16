@@ -72,6 +72,17 @@ $cfg = [
                 ],
                 [
                     'class' => EmailTarget::class,
+                    'except' => [
+                        'yii\web\HttpException:400',
+                        'yii\web\HttpException:401',
+                        'yii\web\HttpException:403',
+                        'yii\web\HttpException:404',
+                        'yii\web\HttpException:409',
+                        'yii\web\HttpException:410',
+                        'yii\web\HttpException:422',
+                        'yii\web\HttpException:429',
+                        'yii\web\HttpException:502',
+                    ],
                     'categories' => ['application'], // stick to messages from this app, not all of Yii's built-in messaging.
                     'logVars' => [], // no need for default stuff: http://www.yiiframework.com/doc-2.0/yii-log-target.html#$logVars-detail
                     'levels' => ['error'],
