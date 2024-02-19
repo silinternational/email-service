@@ -6,7 +6,7 @@ on:
 jobs:
   unit-tests:
     name: Unit Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,7 +15,7 @@ jobs:
           docker-compose -f actions-services.yml run --rm app ./run-tests.sh
   api-tests:
     name: API Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -24,7 +24,7 @@ jobs:
           docker-compose -f actions-services.yml run --rm app ./run-tests-api.sh
   psr2-check:
     name: PSR2 check
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,7 +35,7 @@ jobs:
   build-and-publish:
     name: Build and Publish
     needs: [unit-tests,api-tests,psr2-check]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
