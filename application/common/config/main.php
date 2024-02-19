@@ -81,7 +81,7 @@ $cfg = [
                         'yii\web\HttpException:410',
                         'yii\web\HttpException:422',
                         'yii\web\HttpException:429',
-                        'yii\web\HttpException:502',
+                        'yii\web\HttpException:503',
                     ],
                     'categories' => ['application'], // stick to messages from this app, not all of Yii's built-in messaging.
                     'logVars' => [], // no need for default stuff: http://www.yiiframework.com/doc-2.0/yii-log-target.html#$logVars-detail

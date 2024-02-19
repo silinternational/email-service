@@ -10,7 +10,7 @@ use yii\web\HttpException;
 
 class SiteController extends Controller
 {
-    public const HttpExceptionBadGateway = 502;
+    public const HttpExceptionServiceUnavailable = 503;
 
     public function behaviors()
     {
@@ -32,7 +32,7 @@ class SiteController extends Controller
         } catch (Exception $e) {
             \Yii::error($e->getMessage());
             throw new HttpException(
-                self::HttpExceptionBadGateway,
+                self::HttpExceptionServiceUnavailable
                 'Database connection problem.',
                 $e->getCode()
             );
