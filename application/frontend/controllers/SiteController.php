@@ -32,7 +32,7 @@ class SiteController extends Controller
         } catch (Exception $e) {
             \Yii::error($e->getMessage());
             throw new HttpException(
-                self::HttpExceptionServiceUnavailable
+                self::HttpExceptionServiceUnavailable,
                 'Database connection problem.',
                 $e->getCode()
             );
