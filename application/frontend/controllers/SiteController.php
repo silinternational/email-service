@@ -6,10 +6,12 @@ use Exception;
 use Yii;
 use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
-use yii\web\ServerErrorHttpException;
+use yii\web\HttpException;
 
 class SiteController extends Controller
 {
+    public const HttpExceptionServiceUnavailable = 503;
+
     public function behaviors()
     {
         $behaviors = parent::behaviors();
@@ -29,7 +31,8 @@ class SiteController extends Controller
             Yii::$app->db->open();
         } catch (Exception $e) {
             \Yii::error($e->getMessage());
-            throw new ServerErrorHttpException(
+            throw new HttpException(
+                self::HttpExceptionServiceUnavailable,
                 'Database connection problem.',
                 $e->getCode()
             );
