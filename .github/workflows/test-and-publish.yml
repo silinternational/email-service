@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  unit-tests:
+  tests:
     name: Unit Tests
     runs-on: ubuntu-latest
     steps:
@@ -19,7 +19,7 @@ jobs:
 
   build-and-publish:
     name: Build and Publish
-    needs: [unit-tests,api-tests,psr2-check]
+    needs: tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
