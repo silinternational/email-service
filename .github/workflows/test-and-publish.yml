@@ -11,26 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Run unit tests
-        run: |
-          docker-compose -f actions-services.yml run --rm app ./run-tests.sh
-  api-tests:
-    name: API Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        run: docker-compose -f actions-services.yml run --rm app ./run-tests.sh
       - name: Run API tests
-        run: |
-          docker-compose -f actions-services.yml run --rm app ./run-tests-api.sh
-  psr2-check:
-    name: PSR2 check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+        run: docker-compose -f actions-services.yml run --rm app ./run-tests-api.sh
       - name: Check PSR2
-        run: |
-          docker-compose -f actions-services.yml run --rm app ./check-psr2.sh
+        run: docker-compose -f actions-services.yml run --rm app ./check-psr2.sh
 
   build-and-publish:
     name: Build and Publish
