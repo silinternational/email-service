@@ -15,7 +15,7 @@ $mysqlHost         = Env::requireEnv('MYSQL_HOST');
 $mysqlDatabase     = Env::requireEnv('MYSQL_DATABASE');
 $mysqlUser         = Env::requireEnv('MYSQL_USER');
 $mysqlPassword     = Env::requireEnv('MYSQL_PASSWORD');
-$notificationEmail = Env::requireEnv('NOTIFICATION_EMAIL');
+$notificationEmail = Env::get('NOTIFICATION_EMAIL');
 
 $emailQueueBatchSize = Env::get('EMAIL_QUEUE_BATCH_SIZE', 10);
 $mailerUseFiles      = Env::get('MAILER_USEFILES', false);
@@ -71,6 +71,7 @@ $cfg = [
                     'exportInterval' => 1,
                 ],
                 [
+                    'enabled' => !empty($notificationEmail),
                     'class' => EmailTarget::class,
                     'except' => [
                         'yii\web\HttpException:400',
