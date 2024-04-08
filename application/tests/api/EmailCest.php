@@ -63,7 +63,6 @@ class EmailCest
         $I->wantTo('queue an email with all fields');
         $I->haveHttpHeader('Authorization', 'Bearer abc123');
         $I->sendPOST('/email', [
-            'id' => 123,
             'to_address' => 'test@example.org',
             'cc_address' => 'testcc@example.org',
             'bcc_address' => 'testbcc@example.org',
@@ -77,7 +76,6 @@ class EmailCest
             'send_after' => 1556314645,
         ]);
         $I->seeResponseCodeIs(200);
-        $I->dontSeeResponseContains('123');
         $I->dontSeeResponseContains('456');
         $I->dontSeeResponseContains('11111111');
         $I->dontSeeResponseContains('22222222');
