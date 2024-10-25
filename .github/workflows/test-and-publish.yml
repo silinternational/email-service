@@ -51,6 +51,7 @@ jobs:
             type=ref,event=branch  # Tag with branch name
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
