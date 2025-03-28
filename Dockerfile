@@ -1,4 +1,4 @@
-FROM silintl/php8:8.1
+FROM silintl/php8:8.3
 
 ENV REFRESHED_AT 2023-01-11
 
