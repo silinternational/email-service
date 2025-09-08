@@ -1,5 +1,6 @@
 # ARCHIVED
 
+This repository is in archival status because it has been made obsolete by features added to idp-id-broker.
 
 # email-service
 
